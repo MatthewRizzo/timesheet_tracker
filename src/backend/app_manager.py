@@ -1,3 +1,4 @@
+"""File responsible for all flask routes"""
 import flask
 from flask import request, Flask, render_template, send_from_directory
 import os
@@ -8,7 +9,6 @@ src_root = os.path.dirname(cur_file_path)
 static_dir = os.path.join(src_root, "static")
 template_dir = os.path.join(src_root, "templates")
 images_dir = os.path.join(static_dir, "images")
-print(f"static_dir={static_dir}")
 url_root = "Timekeeper"
 app = Flask(__name__, 
             static_folder=static_dir, 
@@ -23,7 +23,8 @@ def homepage():
 def favicon():
     return send_from_directory(images_dir, 'stopwatch.png', mimetype='image/vnd.microsoft.icon')
 
-if __name__ == "__main__":
+
+def start_app():
     # TODO - make port dyanmic and ensure it is unused
     host_name = 'localhost'
     port = 5000
