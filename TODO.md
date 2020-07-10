@@ -16,3 +16,6 @@
 6. Change local host to a custom name like "Timekeeper"
 7. Fix column spacing to adjust to percentage of width available
     * Also have contents of columns be forced to stay inside of them
+8. Make login so that multiple people can use program without seeing each other's data
+9. Add Scroll whell to general info section. Enables not having to delete everytime another data point is added
+    * Will have to encapsulate each message in a box / card

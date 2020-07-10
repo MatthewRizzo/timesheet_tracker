@@ -2,7 +2,8 @@
 .flex-container {
     display: flex;
     width: 100%;
-    height: 600px;
+    height: 60%;
+    
 }
 
 .flex-row {
@@ -46,11 +47,30 @@ input[type="text"] {
     margin-right: 10px;
     align-self: flex-start;
 }
-/* End of Classes */
+/* End of Input Classes */
+
+/* General Display Classes */
+.general-information {
+    width: 99%; 
+    height: 38%;
+    border: 1px;
+    border-style: solid;
+    margin-left: .5%;
+    margin-right: 2%;
+}
+
+.read-text {
+    width: 100%;
+    height: 100%;
+}
+
+.prompt-header {
+    margin-bottom: 0px;
+}
+/* End of General Display Classes */
 
 /* Dropdown Classes */
 .dropdown {
     display: block;
 }
-
 /* End of Dropdown Classes */

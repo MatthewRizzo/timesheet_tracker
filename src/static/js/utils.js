@@ -1,3 +1,4 @@
+"use strict"
 /**
  * Utility functions that can be used across other files
  */
@@ -5,7 +6,7 @@
 
 /**
  * @brief Utility function to maintain alphabetical order of dropdown options
- * @param {ElementId} dropdown_element_id The dropdown being modified
+ * @param {string} dropdown_element_id The dropdown being modified
  */
 export function maintain_alphabetical_order(dropdown_element_id){
     const jquery_id = "#" + dropdown_element_id;
@@ -35,32 +36,35 @@ export function post_request(url, data_json){
     $.post({
         url: url,
         data: JSON.stringify(data_json),
-        dataType: 'json',
+        dataType: 'application/json',
         
         success: function(){},
-        error: function(event){
+        error: function(request, status, error){
             console.log("Failed post request for url " + url);
-            console.log("Error " + event.error);
+            console.log("Error " + error);
+            console.log("Status " + status);
         }
     });
 }
 
 /**
  * @brief Utility function to abstract away repetition of async post requests
- * @param {*} url Url to post request for
- * @param {*} data_json Data to send in post request
+ * @param {string} url Url to post request for
+ * @param {JSON} data_json Data to send in post request
  */
 export async function async_post_request(url, data_json) { 
     let response = '';
-
+    console.log('data = ' + JSON.stringify(data_json))
     try{
         response = await $.post({
             url: url,
             data: JSON.stringify(data_json),
             dataType: 'json',
+
         });
     }catch (error){
-        console.log(error.error);
+        console.log("Failed post request for url " + url);
+        console.log(JSON.stringify(error));
         response = 'ERROR';
     }
 

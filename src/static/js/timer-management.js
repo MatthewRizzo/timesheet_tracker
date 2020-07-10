@@ -1,3 +1,4 @@
+"use strict"
 /**
  * File responsbile for js behavior in the Timer panel of the webpage
  */

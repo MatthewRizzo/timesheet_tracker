@@ -17,12 +17,12 @@ app = Flask(__name__,
             static_folder=static_dir, 
             template_folder=template_dir,
             root_path=src_root)
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 # Used to communicate from backend->frontend js
 socketio = SocketIO(app, async_mode="threading")
 
 def send_to_client(message_name, content_json=None):
     """Function to enable communication from backend to front-end via sockets"""
-    print(f"in emit function for {message_name}")
     if content_json:
         socketio.emit(message_name, content_json)
     else:
@@ -43,9 +43,19 @@ def favicon():
 ##########################
 @app.route('/add_task', methods=['POST'])
 def add_task():
-    new_task = request.get_json(force=True)['new_task']
-    controller.add_task(new_task)
+    if request.method == "POST":
+        new_task = request.get_json(force=True)['new_task']
+        controller.add_task(new_task)
+    else:
+        print("get request")
     return jsonify('ACK')
+
+@app.route('/get_task_list', methods=['POST', 'GET'])
+def get_task_list():
+    task_list = controller.get_task_list()
+    
+    return jsonify({'task_list': task_list})
+    
 
 #################################
 # End of Task Selection Routes  #

@@ -8,13 +8,18 @@
     <!-- CSS Includes -->
     <link rel="stylesheet" type="text/css" href="../static/css/general.css">
     <link rel="stylesheet" type="text/css" href="../static/css/task_selection.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/timer_management.css">
 
     <!-- Javascript Includes (in alphabetical order)-->
-    <script type="module" src="../static/js/jquery-3.5.1.min.js"></script>
+    <script type="module" src="../static/js/initialize-page.js"></script>
+    <script src="../static/js/jquery-3.5.1.min.js"></script>
+    <script type="module" src="../static/js/server-messages.js"></script>
+    <script src="../static/js/socket-io-1.4.5.min.js"></script>
     <script type="module" src="../static/js/task-selection.js"></script>
+    <script type="module" src="../static/js/timer-management.js"></script>
     <script type="module" src="../static/js/utils.js"></script>
 
-<body>
+<body style="height: 95vh">
     <div class="flex-container" id="column-container">
         <div class="flex-column main-columns" id="task-selection">
             <p>Task Selection</p>
@@ -25,15 +30,25 @@
             <div class="space-row"></div>
             <select name="Task" id="select-task-dropdown" class="dropdown">
                 <!-- Options will be added to this dropdown via add-new-task input-->
-                <option id="placeholder-task" value="Please Add a Task">Please Add a Task</option>
+                <option id="placeholder-task" disabled selected value="Please Add a Task">Please Add a Task</option>
             </select>
         </div>
         <div class="flex-column main-columns" id="timer">
             <p>Timer</p>
+            <div class="flex-row timer-row" id="timer-controller">
+                <button class="timer-button" id="start-timer" disabled>Start Stopwatch</button>
+                <button class="timer-button" id="stop-timer" disabled>Stop Stopwatch</button>
+            </div>
         </div>
         <div class="flex-column main-columns" id="time-display">
             <p>Time Display</p>
         </div>
+    </div>
+    <div class="flex-row prompt-header" style="justify-content: center;">
+        <p class="prompt-header">General Information</p>
+    </div>
+    <div class="flex-row general-information" id="general-display">
+        <textarea readonly="true" class="read-text" id="general-info"></textarea>
     </div>
 </body>
 </html>
