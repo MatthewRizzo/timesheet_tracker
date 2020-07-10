@@ -1,0 +1,12 @@
+.add-task-row {
+    width: 100%;
+}
+
+#add-new-task {
+    margin-left: 10px;
+}
+
+#submit-new-task {
+    align-self: center;
+}
+
