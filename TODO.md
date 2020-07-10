@@ -1,4 +1,4 @@
-## Higher level functionalities to implement
+## Higher level priority functionalities to implement
 
 1. Add Mode's that are selected in task menu
     1. For now just law mode
@@ -9,13 +9,18 @@
 2. Make a threaded logging class
     1. Periodically writes the current time/data json to a file 
     2. Will require a thread lock/mutex on the data in the time_manager class
-3. Adding a task should also add another level to the time_manager json
-    1. I.e. create a clean dict template but apply it behind the 'key' that is the new task
-4. Setup a venv for this program. Ensures server running backend does not have to change its native packages
-5. Make pressing enter while in Enter New Task input also submit the task
-6. Change local host to a custom name like "Timekeeper"
-7. Fix column spacing to adjust to percentage of width available
-    * Also have contents of columns be forced to stay inside of them
-8. Make login so that multiple people can use program without seeing each other's data
-9. Add Scroll whell to general info section. Enables not having to delete everytime another data point is added
+3. When Stopwatch running, display time elapsed in timer section (show minute rollovers)
+4. Add to Time Display
+    1. Dropdown identical to contents of task selection dropdown
+    2. The selected dropdown controls which task's data is shown
+    3. On the top, show the total time spent on the task
+    4. Every line after, show the start, stop, and diff of the run
+    5. If necessary, add a scroll wheel
+
+## Low Priority tasks once base functionality exists
+1. Make login so that multiple people can use program without seeing each other's data
+2. Add Scroll wheel to general info section. Enables not having to delete everytime another data point is added
     * Will have to encapsulate each message in a box / card
+3. Setup a venv for this program. Ensures server running backend does not have to change its native packages
+4. Change local host to a custom name like "Timekeeper"
+5. Make pressing enter while in Enter New Task input also submit the task
