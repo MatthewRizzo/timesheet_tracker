@@ -1,0 +1,12 @@
+astroid==2.4.2
+dnspython==1.16.0
+Flask==1.1.2
+Flask-SocketIO==4.3.1
+Flask-Uploads==0.2.1
+Jinja2==2.11.2
+pylint==2.5.3
+pyserial==3.4
+python-engineio==3.13.1
+python-socketio==4.6.0
+Werkzeug==1.0.1
+wrapt==1.12.1
