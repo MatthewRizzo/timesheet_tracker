@@ -21,7 +21,7 @@ $(document).ready(() =>{
         const text_area = document.getElementById('general-info');
 
         let msg = "Task " + task + ":" + "\n----------------------\n";
-        msg += "\nStart: " + start_time + "\nStop: "+ stop_time + "\nDifference: " + difference + "hours";
+        msg += "\nStart: " + start_time + "\nStop: "+ stop_time + "\nDifference: " + difference + " hours";
         text_area.value = msg;
 
     });

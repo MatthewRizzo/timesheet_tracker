@@ -20,18 +20,19 @@ export async function add_task(new_task, is_initializing){
     const dropdown_id = 'select-task-dropdown';
     const dropdown = document.getElementById(dropdown_id);
     const placeholder_id = 'placeholder-task';
+    let is_duplicate = false;
     remove_placeholder_option(dropdown, placeholder_id);
 
     if(is_initializing == false){
-        await backend_add_task(new_task);
+        is_duplicate = await backend_add_task(new_task);
     }
-
-    // Create and append the new option
-    const new_option = document.createElement('option');
-    new_option.value = new_task;
-    new_option.text  = new_task;
-    dropdown.appendChild(new_option);
-
+    if(is_duplicate == false){
+        // Create and append the new option
+        const new_option = document.createElement('option');
+        new_option.value = new_task;
+        new_option.text  = new_task;
+        dropdown.appendChild(new_option);
+    }
 
 }
 
@@ -74,9 +75,14 @@ function remove_placeholder_option(dropdown_element, placeholder_id){
 /**
  * @brief Wrapper for adding a new task to the tracked task list on the backend
  * @param {string} task_name The name of the task to add
+ * @return {Boolean} true if the task is a duplicate, false otherwise
  */
 async function backend_add_task(task_name) {
     const url = '/add_task';
     const data = {'new_task' : task_name};
-    post_request(url, data);
+    const response = await async_post_request(url, data);
+    if(response == "Already Added"){
+        return true;
+    }else
+    return false;
 }

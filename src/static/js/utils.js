@@ -54,7 +54,6 @@ export function post_request(url, data_json){
  */
 export async function async_post_request(url, data_json) { 
     let response = '';
-    console.log('data = ' + JSON.stringify(data_json))
     try{
         response = await $.post({
             url: url,

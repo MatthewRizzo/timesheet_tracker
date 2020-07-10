@@ -45,10 +45,8 @@ def favicon():
 def add_task():
     if request.method == "POST":
         new_task = request.get_json(force=True)['new_task']
-        controller.add_task(new_task)
-    else:
-        print("get request")
-    return jsonify('ACK')
+        return_code = controller.add_task(new_task)
+    return jsonify(return_code)
 
 @app.route('/get_task_list', methods=['POST', 'GET'])
 def get_task_list():

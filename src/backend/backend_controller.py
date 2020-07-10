@@ -16,7 +16,8 @@ class BackendController():
         return_code = self.timer.add_task(new_task)
         if return_code == 'Already Added':
             self.send_to_client('update_info', {'info': f'Task \'{new_task}\' already exists'})
-        return
+            return 'Already Added'
+        return 'ACK'
 
     def get_task_list(self):
         """:brief returns a list of the tasks currently stored by time_manager"""

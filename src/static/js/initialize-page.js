@@ -17,7 +17,6 @@ async function synchronize_task_dropdown(){
     const url = "/get_task_list";
     const response_dict = await async_post_request(url, {});
     const task_list = response_dict.task_list;
-    console.log("Task List = " + JSON.stringify(task_list));
     if(task_list == "ERROR"){
         console.error("No Valid Task List received. Cannot Add to Dropdown")
         return
