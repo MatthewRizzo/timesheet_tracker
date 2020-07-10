@@ -1,0 +1,10 @@
+.timer-row {
+    width: 100%;
+}
+
+.timer-button {
+    height: 21px;
+    width: 50%;
+    margin-left: 20px;
+    margin-right: 20px
+}

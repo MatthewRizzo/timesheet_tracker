@@ -2,17 +2,17 @@
  * File responsbile for js behavior in the task selection panel of the webpage
  */
 
-import { maintain_alphabetical_order } from './utils.js'
+import { maintain_alphabetical_order, async_post_request } from './utils.js'
 
 $(document).ready(()=>{
-    const submit_task_btn = document.getElementById("submit-new-task")
+    const submit_task_btn = document.getElementById("submit-new-task");
     submit_task_btn.addEventListener('click', add_task);
 })
 
 /**
  * @brief Reads in input task and adds it to dropdown, ignores if empty
  */
-function add_task(){
+async function add_task(){
     const dropdown_id = 'select-task-dropdown';
     const dropdown = document.getElementById(dropdown_id);
     const placeholder_id = 'placeholder-task';
@@ -24,6 +24,8 @@ function add_task(){
     if(new_task == ''){
         return
     }
+
+    await backend_add_task(new_task);
 
     remove_placeholder_option(dropdown, placeholder_id);
 
@@ -41,9 +43,21 @@ function add_task(){
 function remove_placeholder_option(dropdown_element, placeholder_id){
     // When adding the first task, the 0th option will always be the placeholder
     const placeholder_option = document.getElementById(placeholder_id);
-    console.log(dropdown_element.options[0].value)
-    console.log(placeholder_option)
     if (dropdown_element.options[0] == placeholder_option){
         dropdown_element.remove(0)
     }
+
+    // Enable the start button once the first valid task has been added
+    const start_button = document.getElementById('start-timer');
+    start_button.disabled = false;
+}
+
+/**
+ * 
+ * @param {string} task_name The name of the task to add
+ */
+async function backend_add_task(task_name) {
+    const url = '/add_task';
+    const data = {'new_task' : task_name};
+    const success = await async_post_request(url, data);
 }

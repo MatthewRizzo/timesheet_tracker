@@ -12,3 +12,7 @@
 3. Adding a task should also add another level to the time_manager json
     1. I.e. create a clean dict template but apply it behind the 'key' that is the new task
 4. Setup a venv for this program. Ensures server running backend does not have to change its native packages
+5. Make pressing enter while in Enter New Task input also submit the task
+6. Change local host to a custom name like "Timekeeper"
+7. Fix column spacing to adjust to percentage of width available
+    * Also have contents of columns be forced to stay inside of them
