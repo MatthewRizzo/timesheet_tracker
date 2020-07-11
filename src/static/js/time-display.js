@@ -22,7 +22,6 @@ $(document).ready(() => {
  */
 function wait_for_options() {
     if(display_dropdown_object.get_selected_option().value != display_dropdown_object.get_placeholder_element().value){
-        console.log("turning on display_total_time")
         // It is now safe to poll for total time.
         update_total_time_interval.activate_interval();
     
@@ -36,7 +35,6 @@ function wait_for_options() {
  * @Note By default, this function will not be called by interval. It is deactivated until at least one option is present
  */
 async function display_total_time (){
-    console.log('calling display_total_time')
     const url = '/get_total_time';
     const task = display_dropdown_object.get_selected_option().value;
     const data = {'task': task};
@@ -54,6 +52,7 @@ async function display_total_time (){
  * @precondition The Task Selection dropdown has been sorted
  */
 export function copy_tasks_to_display_dropdown(){
+    const selected_value_before = display_dropdown_object.get_selected_option().value;
     // Clear the current display dropdown
     display_dropdown_object.clear_dropdown();
 
@@ -63,5 +62,6 @@ export function copy_tasks_to_display_dropdown(){
     const dst_dropdown = display_dropdown_object.get_dropdown();
     dst_dropdown.innerHTML = src_dropdown.innerHTML;
 
+    display_dropdown_object.set_selected(selected_value_before);
     display_total_time();
 }

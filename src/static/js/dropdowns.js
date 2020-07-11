@@ -38,25 +38,6 @@ export class DropdownManagement {
     }
 
     /**
-     * @returns {HTMLElement} The selected option. To get the value, just do .value
-     */
-    get_selected_option(){
-        return this._dropdown[this._dropdown.selectedIndex];
-    }
-
-    get_options_list(){
-       return Array.from(this._dropdown.options);
-    }
-
-    /**
-     * @returns {Number} The number of options
-     */
-    get_num_options(){
-        const options_list = this.get_options_list();
-        return options_list.length;
-    }
-
-    /**
      * @brief Utility function to maintain alphabetical order of dropdown options
      */
     maintain_alphabetical_order(){
@@ -78,6 +59,36 @@ export class DropdownManagement {
     clear_dropdown(){
         this._jquery_dropdown.empty();
     }
+
+        /**
+     * @returns {HTMLElement} The selected option. To get the value, just do .value
+     */
+    get_selected_option(){
+        return this._dropdown[this._dropdown.selectedIndex];
+    }
+    get_options_list(){
+       return Array.from(this._dropdown.options);
+    }
+    /**
+     * Given a value, will select it
+     * @param {string} value The value to select
+     */
+    set_selected(value){
+        const options = this.get_options_list()
+        for(let option of options){
+            if(option.value == value){
+                const index_to_select = option.index;
+                this._dropdown.selectedIndex = index_to_select;
+            }
+        }
+    }
+    /**
+     * @returns {Number} The number of options
+     */
+    get_num_options(){
+        const options_list = this.get_options_list();
+        return options_list.length;
+    }
     get_jquery_dropdown(){
         return this._jquery_dropdown;
     }
@@ -90,6 +101,8 @@ export class DropdownManagement {
     get_placeholder_element(){
         return this._placeholder_element;
     }
+
+
 
     // Private Functions
     /**

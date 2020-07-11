@@ -12,7 +12,7 @@
 3. Add to Time Display
     * [x] Dropdown identical to contents of task selection dropdown
     * [ ] The selected dropdown controls which task's data is shown
-    * [ ] On the top, show the total time spent on the task
+    * [x] On the top, show the total time spent on the task
     * [ ] Every line after, show the start, stop, and diff of the run
     * [ ] If necessary, add a scroll wheel
 
