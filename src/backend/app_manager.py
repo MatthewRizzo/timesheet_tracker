@@ -8,97 +8,105 @@ import webbrowser
 
 from backend.backend_controller import BackendController
 
-cur_file_path = os.path.abspath(os.path.dirname(__file__))
-src_root = os.path.dirname(cur_file_path)
-static_dir = os.path.join(src_root, "static")
-template_dir = os.path.join(src_root, "templates")
-images_dir = os.path.join(static_dir, "images")
-url_root = "Timekeeper"
-app = Flask(__name__, 
-            static_folder=static_dir, 
-            template_folder=template_dir,
-            root_path=src_root)
-app.config['TEMPLATES_AUTO_RELOAD'] = True
+class AppManager():
+    """Class responsible for setting up the Flask app and managing all the routes / sockets"""
+    def __init__(self):
+        self._setup_app_config()
 
-# Used to communicate from backend->frontend js
-socketio = SocketIO(app, async_mode="threading")
+        # TODO - have this get controlled via an input
+        self._debug = False
 
-def send_to_client(message_name, content_json=None):
-    """Function to enable communication from backend to front-end via sockets"""
-    if content_json:
-        socketio.emit(message_name, content_json)
-    else:
-        socketio.emit(message_name)
+        # Used to communicate from backend->frontend js
+        self._socketio = SocketIO(self._app, async_mode="threading")
 
-controller = BackendController(send_to_client)
+        self._create_url()
 
-@app.route("/")
-def homepage():
-    return render_template("index.html")
+        self._controller = BackendController(self._send_to_client)
 
-@app.route('/favicon.ico')
-def favicon():
-    return send_from_directory(images_dir, 'stopwatch.png', mimetype='image/vnd.microsoft.icon')
+        # Setup App Routes
+        self._create_mainpage_routes()
+        self._create_task_selection_routes()
+        self._create_timer_routes()
 
-##########################
-# Task Selection Routes  #
-##########################
-@app.route('/add_task', methods=['POST'])
-def add_task():
-    if request.method == "POST":
-        new_task = request.get_json()['new_task']
-        return_code = controller.add_task(new_task)
-    return jsonify(return_code)
 
-@app.route('/get_task_list', methods=['POST', 'GET'])
-def get_task_list():
-    task_list = controller.get_task_list()
-    
-    return jsonify({'task_list': task_list})
-    
+    def _send_to_client(self, message_name, content_json=None):
+        """Function to enable communication from backend to front-end via sockets"""
+        if content_json:
+            self._socketio.emit(message_name, content_json)
+        else:
+            self._socketio.emit(message_name)
 
-#################################
-# End of Task Selection Routes  #
-#################################
+    def _create_mainpage_routes(self):
+        @self._app.route("/")
+        def homepage():
+            return render_template("index.html")
 
-#################
-# Timer Routes  #
-#################
-@app.route('/start_timer', methods=['POST'])
-def start_timer():
-    task_name = request.get_json()['task']
-    controller.start_timer(task_name)
-    return jsonify('ACK')
+        @self._app.route('/favicon.ico')
+        def favicon():
+            return send_from_directory(self._images_dir, 'stopwatch.png', mimetype='image/vnd.microsoft.icon')
 
-@app.route('/stop_timer', methods=['POST'])
-def stop_timer():
-    task_name = request.get_json()['task']
-    controller.stop_timer(task_name)
-    return jsonify('ACK')
+    def _create_task_selection_routes(self):
+        """Function responsible for all routes in the Task Selection Panel"""
+        @self._app.route('/add_task', methods=['POST'])
+        def add_task():
+            if request.method == "POST":
+                new_task = request.get_json()['new_task']
+                return_code = self._controller.add_task(new_task)
+            return jsonify(return_code)
 
-@app.route('/get_current_diff', methods=['POST'])
-def get_current_diff():
-    task_name = request.get_json()['task']
-    time_diff = controller.get_current_diff(task_name)
-    units = controller.time_units
-    return jsonify({'time_diff': time_diff, 'units': units})
+        @self._app.route('/get_task_list', methods=['POST', 'GET'])
+        def get_task_list():
+            task_list = self._controller.get_task_list()
+            
+            return jsonify({'task_list': task_list})
 
-########################
-# End of Timer Routes  #
-########################
+    def _create_timer_routes(self):
+        """Function responsible for all routes in the timer/Stopwatch Panel"""
+        @self._app.route('/start_timer', methods=['POST'])
+        def start_timer():
+            task_name = request.get_json()['task']
+            self._controller.start_timer(task_name)
+            return jsonify('ACK')
 
-def start_app():
-    # TODO - make port dyanmic and ensure it is unused
-    host_name = 'localhost'
-    port = 5000
-    webbrowser.open(f"http://{host_name}:{port}/")
+        @self._app.route('/stop_timer', methods=['POST'])
+        def stop_timer():
+            task_name = request.get_json()['task']
+            self._controller.stop_timer(task_name)
+            return jsonify('ACK')
 
-    debug = False
-    if debug is False:
-        log = logging.getLogger('werkzeug')
-        log.setLevel(logging.ERROR)
-    else:
-        log = logging.getLogger('werkzeug')
-        log.setLevel(logging.INFO)
+        @self._app.route('/get_current_diff', methods=['POST'])
+        def get_current_diff():
+            task_name = request.get_json()['task']
+            time_diff = self._controller.get_current_diff(task_name)
+            units = self._controller.time_units
+            return jsonify({'time_diff': time_diff, 'units': units})
 
-    app.run(host=host_name, port=port, debug=debug)
+    def _create_url(self):
+        # TODO - make port dyanmic and ensure it is unused
+        self._host_name = 'localhost'
+        self._port = 5000
+
+    def _setup_app_config(self):
+        self._cur_file_path = os.path.abspath(os.path.dirname(__file__))
+        self._src_root = os.path.dirname(self._cur_file_path)
+        self._static_dir = os.path.join(self._src_root, "static")
+        self._template_dir = os.path.join(self._src_root, "templates")
+        self._images_dir = os.path.join(self._static_dir, "images")
+        self._url_root = "Timekeeper"
+        self._app = Flask(__name__, 
+                    static_folder=self._static_dir, 
+                    template_folder=self._template_dir,
+                    root_path=self._src_root)
+        self._app.config['TEMPLATES_AUTO_RELOAD'] = True
+
+    def start_app(self):
+        """Startup Flask"""
+        if self._debug is False:
+            self._log = logging.getLogger('werkzeug')
+            self._log.setLevel(logging.ERROR)
+        else:
+            self._log = logging.getLogger('werkzeug')
+            self._log.setLevel(logging.INFO)
+
+        webbrowser.open(f"http://{self._host_name}:{self._port}/")
+        self._app.run(host=self._host_name, port=self._port, debug=self._debug)
