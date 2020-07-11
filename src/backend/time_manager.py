@@ -153,6 +153,12 @@ class TimeManager():
     def set_latest_diff_time(self, task_name, diff_time):
         self.get_latest_times(task_name)[constants.TIME_PAIRINGS_INDICES['time_diff']] = diff_time
 
+    def get_total_time(self, task_name):
+        if task_name not in self._task_json:
+            return "No time yet"
+        else:
+            return self._task_json[task_name]['total_time']
+
     @property
     def task_list(self):
         if self._task_json == {}:

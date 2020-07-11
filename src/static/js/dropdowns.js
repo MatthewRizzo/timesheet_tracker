@@ -14,6 +14,7 @@ export class DropdownManagement {
         this._jquery_dropdown = $(this._dropdown_jquery_id);
 
         this._placeholder_id = placeholder_id;
+        this._placeholder_element = document.getElementById(this._placeholder_id);
     }
 
     // Public Functions
@@ -82,6 +83,12 @@ export class DropdownManagement {
     }
     get_dropdown(){
         return this._dropdown;
+    }
+    get_dropdown_id(){
+        return this._dropdown_element_id;
+    }
+    get_placeholder_element(){
+        return this._placeholder_element;
     }
 
     // Private Functions

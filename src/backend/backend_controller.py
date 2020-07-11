@@ -51,6 +51,11 @@ class BackendController():
         """Interface function between app_manager and time_manager for updating a tasks current the timer"""
         return self.timer.get_current_diff(task_name)
 
+    def get_total_time(self, task_name):
+        """Interface function between app_manager and time_manager for getting a tasks total time"""
+        total_time = self.timer.get_total_time(task_name)
+        return total_time
+        
     ################
     # End of Timer #
     ################

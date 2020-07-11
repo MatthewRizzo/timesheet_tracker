@@ -8,9 +8,9 @@ import { DropdownManagement } from './dropdowns.js'
 import { task_dropdown_object } from './repeating-objects.js'
 import { copy_tasks_to_display_dropdown } from './time-display.js'
 
-$(document).ready(() => {
+$(document).ready(async () => {
     const submit_task_btn = document.getElementById("submit-new-task");
-    submit_task_btn.addEventListener('click', read_new_task);
+    submit_task_btn.addEventListener('click', async () => read_new_task(), false);
 })
 
 /**

@@ -29,7 +29,7 @@ export function post_request(url, data_json){
  * @param {JSON} data_json Data to send in post request
  */
 export async function async_post_request(url, data_json) { 
-    let response = '';
+    let response = null;
     try{
         response = await $.post({
             url: url,

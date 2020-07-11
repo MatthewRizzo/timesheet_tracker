@@ -10,11 +10,11 @@
     1. Periodically writes the current time/data json to a file 
     2. Will require a thread lock/mutex on the data in the time_manager class
 3. Add to Time Display
-    1. Dropdown identical to contents of task selection dropdown
-    2. The selected dropdown controls which task's data is shown
-    3. On the top, show the total time spent on the task
-    4. Every line after, show the start, stop, and diff of the run
-    5. If necessary, add a scroll wheel
+    * [x] Dropdown identical to contents of task selection dropdown
+    * [ ] The selected dropdown controls which task's data is shown
+    * [ ] On the top, show the total time spent on the task
+    * [ ] Every line after, show the start, stop, and diff of the run
+    * [ ] If necessary, add a scroll wheel
 
 ## Low Priority tasks once base functionality exists
 1. Make login so that multiple people can use program without seeing each other's data
@@ -24,3 +24,5 @@
 4. Change local host to a custom name like "Timekeeper"
 5. Make pressing enter while in Enter New Task input also submit the task
 6. Make the calculation mode and debug mode get controlled by flags (use argparse)
+7. Find a way to turn of get_all_time in time-display.js when the stop watch is not running 
+    * temporarily turn it back on if the dropdown menu every changes

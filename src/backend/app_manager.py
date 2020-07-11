@@ -21,13 +21,13 @@ class AppManager():
 
         self._create_url()
 
-        self._controller = BackendController(self._send_to_client)
+        self.controller = BackendController(self._send_to_client)
 
         # Setup App Routes
         self._create_mainpage_routes()
         self._create_task_selection_routes()
         self._create_timer_routes()
-
+        self._create_time_display_routes()
 
     def _send_to_client(self, message_name, content_json=None):
         """Function to enable communication from backend to front-end via sockets"""
@@ -51,12 +51,14 @@ class AppManager():
         def add_task():
             if request.method == "POST":
                 new_task = request.get_json()['new_task']
-                return_code = self._controller.add_task(new_task)
+                return_code = self.controller.add_task(new_task)
+
+                # Remove lock on dropdown
             return jsonify(return_code)
 
         @self._app.route('/get_task_list', methods=['POST', 'GET'])
         def get_task_list():
-            task_list = self._controller.get_task_list()
+            task_list = self.controller.get_task_list()
             
             return jsonify({'task_list': task_list})
 
@@ -65,21 +67,29 @@ class AppManager():
         @self._app.route('/start_timer', methods=['POST'])
         def start_timer():
             task_name = request.get_json()['task']
-            self._controller.start_timer(task_name)
+            self.controller.start_timer(task_name)
             return jsonify('ACK')
 
         @self._app.route('/stop_timer', methods=['POST'])
         def stop_timer():
             task_name = request.get_json()['task']
-            self._controller.stop_timer(task_name)
+            self.controller.stop_timer(task_name)
             return jsonify('ACK')
 
         @self._app.route('/get_current_diff', methods=['POST'])
         def get_current_diff():
             task_name = request.get_json()['task']
-            time_diff = self._controller.get_current_diff(task_name)
-            units = self._controller.time_units
+            time_diff = self.controller.get_current_diff(task_name)
+            units = self.controller.time_units
             return jsonify({'time_diff': time_diff, 'units': units})
+    
+    def _create_time_display_routes(self):
+        @self._app.route("/get_total_time", methods=["POST"])
+        def get_total_time():
+            task_name = request.get_json()['task']
+            total_time = self.controller.get_total_time(task_name)
+            units = self.controller.time_units
+            return jsonify({'total_time': total_time, 'units': units})
 
     def _create_url(self):
         # TODO - make port dyanmic and ensure it is unused
