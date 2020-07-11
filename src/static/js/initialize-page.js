@@ -6,7 +6,9 @@
 import { post_request, async_post_request } from './utils.js';
 import { DropdownManagement } from './dropdowns.js'
 import { enable_start_timer } from './task-selection.js'
-import { task_dropdown_object } from './repeating-objects.js'
+import { task_dropdown_object } from './repeating-objects.js';
+import { copy_tasks_to_display_dropdown } from './time-display.js';
+
 
 $(document).ready(async () =>{
     await synchronize_task_dropdown();
@@ -30,6 +32,8 @@ async function synchronize_task_dropdown(){
 
     for (let task of task_list){
         task_dropdown_object.add_to_dropdown(task);
+        copy_tasks_to_display_dropdown();
+
     }
     task_dropdown_object.maintain_alphabetical_order(dropdown_id);
     enable_start_timer(task_dropdown_object);

@@ -66,11 +66,14 @@ input[type="text"] {
 
 .prompt-header {
     margin-bottom: 0px;
+    justify-content: center;
 }
 /* End of General Display Classes */
 
 /* Dropdown Classes */
 .dropdown {
     display: block;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 /* End of Dropdown Classes */

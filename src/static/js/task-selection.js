@@ -6,6 +6,7 @@
 import { async_post_request, post_request } from './utils.js';
 import { DropdownManagement } from './dropdowns.js'
 import { task_dropdown_object } from './repeating-objects.js'
+import { copy_tasks_to_display_dropdown } from './time-display.js'
 
 $(document).ready(() => {
     const submit_task_btn = document.getElementById("submit-new-task");
@@ -28,6 +29,7 @@ async function read_new_task(){
 
     task_dropdown_object.add_to_dropdown(new_task);
     task_dropdown_object.maintain_alphabetical_order();
+    copy_tasks_to_display_dropdown();
     await backend_add_task(new_task);
 }
 

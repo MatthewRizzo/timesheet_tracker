@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../static/css/general.css">
     <link rel="stylesheet" type="text/css" href="../static/css/task_selection.css">
     <link rel="stylesheet" type="text/css" href="../static/css/timer_management.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/time-display.css">
 
     <!-- Javascript Includes (in alphabetical order)-->
     <script type="module" src="../static/js/dropdowns.js"></script>
@@ -20,6 +21,7 @@
     <script type="module" src="../static/js/server-messages.js"></script>
     <script src="../static/js/socket-io-1.4.5.min.js"></script>
     <script type="module" src="../static/js/task-selection.js"></script>
+    <script type="module" src="../static/js/time-display.js"></script>
     <script type="module" src="../static/js/timer-management.js"></script>
     <script type="module" src="../static/js/utils.js"></script>
 
@@ -33,8 +35,8 @@
             </div>
             <div class="space-row"></div>
             <select name="Task" id="select-task-dropdown" class="dropdown">
-                <!-- Options will be added to this dropdown via add-new-task input-->
-                <option id="placeholder-task" disabled selected value="Please Add a Task">Please Add a Task</option>
+                <!-- Options will be added to this dropdown-->
+                <option id="placeholder-task-selection" disabled selected value="Please Add a Task">Please Add a Task</option>
             </select>
         </div>
         <div class="flex-column main-columns" id="timer">
@@ -45,13 +47,20 @@
             </div>
             <div class="space-row"></div>
             <p class="prompt-header">Running Stopwatch</p>
-            <input readonly id="stopwatch" disabled placeholder="Stopwatch must be running">
+            <input readonly id="stopwatch" placeholder="Stopwatch must be running">
         </div>
         <div class="flex-column main-columns" id="time-display">
             <p>Time Display</p>
+            <div class="flex-row total-time-row" id="timer-controller">
+                <select name="Task" id="display-task-dropdown" class="dropdown">
+                    <!-- Options will be added to this dropdown-->
+                    <option id="placeholder-task-display" disabled selected value="Please Add a Task">Please Add a Task</option>
+                </select>
+                <input class="" readonly id="total-time" placeholder="Total Time">
+            </div>
         </div>
     </div>
-    <div class="flex-row prompt-header" style="justify-content: center;">
+    <div class="flex-row prompt-header">
         <p class="prompt-header">General Information</p>
     </div>
     <div class="flex-row general-information" id="general-display">

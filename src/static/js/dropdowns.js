@@ -66,13 +66,23 @@ export class DropdownManagement {
         });
 
         // Recreate the options in order (add from z->a) so words alphabetically first will be on top
-        this._jquery_dropdown.empty();
+        this.clear_dropdown();
         for(let option of option_order){
             this._dropdown.appendChild(option);
         }
 
         this._dropdown.selectedIndex = 0;
     } // end of maintain_alphabetical_order
+
+    clear_dropdown(){
+        this._jquery_dropdown.empty();
+    }
+    get_jquery_dropdown(){
+        return this._jquery_dropdown;
+    }
+    get_dropdown(){
+        return this._dropdown;
+    }
 
     // Private Functions
     /**
