@@ -14,8 +14,6 @@ $(document).ready(async ()=>{
     const stop_btn =  document.getElementById('stop-timer');
     start_btn.addEventListener('click', start_timer);
     stop_btn.addEventListener('click', stop_timer);
-
-
 });
 
 
@@ -42,12 +40,14 @@ function stop_timer(){
 }
 
 async function display_current_difference(){
-    console.log("display called")
     const url = '/get_current_diff';
     const cur_task = task_dropdown_object.get_selected_option().value;
-    const diff = await async_post_request(url, {'task': cur_task});
+    const response = await async_post_request(url, {'task': cur_task});
+    const time_diff = response.time_diff;
+    const units     = response.units;
+
     const display_box = document.getElementById('stopwatch');
-    display_box.value = diff;
+    display_box.value = time_diff + " " + units;
 
 }
 

@@ -1,10 +1,13 @@
 from backend.time_manager import TimeManager
+from backend import constants
 
 class BackendController():
     def __init__(self, send_to_client):
         self.send_to_client = send_to_client
-        self.timer = TimeManager()
+        self.mode = "law" # TODO: make this an input to the file
+        self.timer = TimeManager(self.mode)
 
+        self.time_units = constants.TIME_UNITS_BY_MODE[self.mode]
         # TODO - add a class to manage writing json to file / storing it elsewhere
 
     ##################
@@ -46,8 +49,8 @@ class BackendController():
 
     def get_current_diff(self, task_name):
         """Interface function between app_manager and time_manager for updating a tasks current the timer"""
-        # TODO - Currently timer's function for update_cur_timer is empty
-        self.timer.get_current_diff(task_name)
+        return self.timer.get_current_diff(task_name)
+
     ################
     # End of Timer #
     ################

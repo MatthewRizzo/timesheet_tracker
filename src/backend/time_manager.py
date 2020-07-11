@@ -4,14 +4,14 @@ import math
 from backend import constants
 
 class TimeManager():
-    def __init__(self):
+    def __init__(self, mode):
         self._task_json = dict()
 
         self._datetimeFormat = '%H:%M:%S'
         self._is_timer_active = False
 
         # TODO - change this to have many modes. Default to law because that is the initial purpose of this program
-        self._time_mode = "law"
+        self._time_mode = mode
 
     #####################
     # Public Functions  #
@@ -44,7 +44,7 @@ class TimeManager():
         # self.get_latest_times(task_name)[constants.TIME_PAIRINGS_INDICES['stop_time']] = self._get_current_time()
         self.set_latest_stop_time(task_name, self._get_current_time())
         
-        time_diff = self._calculate_time_diff(task_name)
+        time_diff = self._calculate_time_diff_at_end(task_name)
 
         # Update the time difference for this pairing + total time
         # self.get_latest_times(task_name)[constants.TIME_PAIRINGS_INDICES['time_diff']] = time_diff
@@ -59,21 +59,20 @@ class TimeManager():
             if time_diff is not None:
                 return time_diff
 
-    def get_current_diff(self, task_name):
-        """Utility function. While timer active, calculate current time it has been running for."""
+    def get_current_diff(self, task_name) -> float:
+        """Utility function. While timer active, calculate current time it has been running for.
+        \n:return The time Difference (in hours)"""
         cur_time = self._get_current_time()
         start_time = self.get_latest_start_time(task_name)
+        
+        cur_diff_time = self.calculate_time_diff(start_time, cur_time)
+        return cur_diff_time
 
     ######################
     # Private Functions  #
     ######################
-    def _calculate_time_diff(self, task_name):
-        """:brief - Calculates the time difference for the last set of times of a given task
-        """
-        
-        start_time = self.get_latest_start_time(task_name)
-        end_time   = self.get_latest_stop_time(task_name)
-
+    def calculate_time_diff(self, start_time: datetime, end_time: datetime) -> float:
+        """Given a start and end time, returns the time difference (in hours)"""
         start_time_striped = datetime.strptime(start_time, self._datetimeFormat)
         end_time_striped   = datetime.strptime(end_time, self._datetimeFormat)
         elapsed_time = end_time_striped - start_time_striped
@@ -89,6 +88,14 @@ class TimeManager():
 
         return hours_passed
 
+    def _calculate_time_diff_at_end(self, task_name):
+        """:brief - Calculates the time difference for the last set of times of a given task"""
+        
+        start_time = self.get_latest_start_time(task_name)
+        end_time   = self.get_latest_stop_time(task_name)
+        return self.calculate_time_diff(start_time, end_time)
+        
+
     def _get_current_time(self):
         """Utility function to return the current time in H:M:S format"""
         cur_time = datetime.now()
@@ -103,18 +110,27 @@ class TimeManager():
         hours_passed_raw = float(time_diff_sec / constants.SEC_PER_HOUR)
 
         # The practice is to always round up to the nearest 6 minutes (10th of an hour). 
-        hours_passed_str, remaining_min_str = str(hours_passed_raw).split('.')
-        remaining_min_tenth_str = remaining_min_str[0]
+        hours_passed_str, hour_dec_str = str(hours_passed_raw).split('.')
+        hours_remaining_float = float("." + hour_dec_str) # recreate it in the form .xxxxxxxx
+        tenths_digit = hour_dec_str[0] # This is the 1/10'ths place
 
         # If the decimal place after a tenth is greater than 0, it means the time is somewhere between 0 and 6 minutes. 
         # Common practice is to round that up to a full 6 minutes no matter what
-        remaining_min_less_than_tenth = int(remaining_min_str[1:])
-        if remaining_min_less_than_tenth > 0:
-            remaining_min_tenth_str = str(int(remaining_min_tenth_str) + 1)
-        
-        total_hours_passed_str = hours_passed_str + '.' + remaining_min_tenth_str
+        if self._fraction_mod(hours_remaining_float, constants.SIX_MINUTES_IN_HOURS) > 0:
+            # proof: .52 mod .1 = .02 > 0
+            tenths_digit = str(int(tenths_digit) + 1)
+        total_hours_passed_str = hours_passed_str + '.' + tenths_digit
         return float(total_hours_passed_str)
 
+    def _fraction_mod(self, value, modulus):
+        """:brief in order to mod with fractions, the following algorithm must be used -> a (mod b) = a - b*floor(a/b)
+        \n:Note:
+            \n - Doing a%b when a and b are both < 1 leads to rounding and floating point errors. The result is incorrect. This method has valid answers.
+            \n- The proof for this came from https://math.stackexchange.com/questions/864568/is-it-possible-to-do-modulo-of-a-fraction 
+        \n:return The result of the mod
+        """
+        division = math.floor(value/modulus)
+        return value - (modulus * division)
     #####################
     # Getters / Setters #
     #####################
