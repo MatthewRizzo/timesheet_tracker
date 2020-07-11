@@ -3,8 +3,10 @@
  * File responsbile for ensure the state of the page is identical each refresh. 
  * Does this through a series of function calls whenever the template is rendered
  */
-import { post_request, async_post_request, maintain_alphabetical_order } from './utils.js';
-import { add_task } from './task-selection.js';
+import { post_request, async_post_request } from './utils.js';
+import { DropdownManagement } from './dropdowns.js'
+import { enable_start_timer } from './task-selection.js'
+import { task_dropdown_object } from './repeating-objects.js'
 
 $(document).ready(async () =>{
     await synchronize_task_dropdown();
@@ -27,8 +29,8 @@ async function synchronize_task_dropdown(){
     const dropdown_id = 'select-task-dropdown';
 
     for (let task of task_list){
-        await add_task(task, true);
+        task_dropdown_object.add_to_dropdown(task);
     }
-
-    maintain_alphabetical_order(dropdown_id);
+    task_dropdown_object.maintain_alphabetical_order(dropdown_id);
+    enable_start_timer(task_dropdown_object);
 }

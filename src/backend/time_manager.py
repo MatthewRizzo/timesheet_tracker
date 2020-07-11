@@ -59,9 +59,10 @@ class TimeManager():
             if time_diff is not None:
                 return time_diff
 
-    def update_cur_timer(self, task_name):
+    def get_current_diff(self, task_name):
         """Utility function. While timer active, calculate current time it has been running for."""
-        #TODO - This once the rest of the basic functionality works
+        cur_time = self._get_current_time()
+        start_time = self.get_latest_start_time(task_name)
 
     ######################
     # Private Functions  #

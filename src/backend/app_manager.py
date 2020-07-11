@@ -44,7 +44,7 @@ def favicon():
 @app.route('/add_task', methods=['POST'])
 def add_task():
     if request.method == "POST":
-        new_task = request.get_json(force=True)['new_task']
+        new_task = request.get_json()['new_task']
         return_code = controller.add_task(new_task)
     return jsonify(return_code)
 
@@ -64,20 +64,20 @@ def get_task_list():
 #################
 @app.route('/start_timer', methods=['POST'])
 def start_timer():
-    task_name = request.get_json(force=True)['task']
+    task_name = request.get_json()['task']
     controller.start_timer(task_name)
     return jsonify('ACK')
 
 @app.route('/stop_timer', methods=['POST'])
 def stop_timer():
-    task_name = request.get_json(force=True)['task']
+    task_name = request.get_json()['task']
     controller.stop_timer(task_name)
     return jsonify('ACK')
 
-@app.route('/update_cur_timer', methods=['POST'])
-def update_cur_timer():
-    task_name = request.get_json(force=True)['task']
-    controller.update_cur_timer(task_name)
+@app.route('/get_current_diff', methods=['POST'])
+def get_current_diff():
+    task_name = request.get_json()['task']
+    controller.get_current_diff(task_name)
     return jsonify('ACK')
 
 ########################

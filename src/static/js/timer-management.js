@@ -2,15 +2,19 @@
 /**
  * File responsbile for js behavior in the Timer panel of the webpage
  */
-import {post_request} from './utils.js'
+import {async_post_request, post_request} from './utils.js';
+import { DynamicInterval } from './dynamic-intervals.js'
+import { DropdownManagement } from './dropdowns.js'
+import { task_dropdown_object } from './repeating-objects.js'
 
-$(document).ready(()=>{
+// Update the time display every .1 seconds
+const intervals = new DynamicInterval(display_current_difference, 100);
+$(document).ready(async ()=>{
     const start_btn = document.getElementById('start-timer');
     const stop_btn =  document.getElementById('stop-timer');
     start_btn.addEventListener('click', start_timer);
     stop_btn.addEventListener('click', stop_timer);
 
-    // TODO - add set interval and function for updating time once timer started
 
 });
 
@@ -22,6 +26,8 @@ function start_timer(){
     const url = '/start_timer';
     const data = {'task': task};
     post_request(url, data);
+    intervals.activate_interval();
+    
 }
 
 function stop_timer(){
@@ -31,6 +37,17 @@ function stop_timer(){
     const data = {'task': task};
     const url = '/stop_timer';
     post_request(url, data);
+    intervals.deactivate_interval();
+
+}
+
+async function display_current_difference(){
+    console.log("display called")
+    const url = '/get_current_diff';
+    const cur_task = task_dropdown_object.get_selected_option().value;
+    const diff = await async_post_request(url, {'task': cur_task});
+    const display_box = document.getElementById('stopwatch');
+    display_box.value = diff;
 
 }
 

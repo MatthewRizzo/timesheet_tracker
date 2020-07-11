@@ -44,10 +44,10 @@ class BackendController():
         info_dict = {'difference': time_diff, 'task': task_name, 'start_time': start_time, 'stop_time': start_time}
         self.send_to_client('stop_timer_diff', info_dict)
 
-    def update_cur_timer(self, task_name):
+    def get_current_diff(self, task_name):
         """Interface function between app_manager and time_manager for updating a tasks current the timer"""
         # TODO - Currently timer's function for update_cur_timer is empty
-        self.timer.update_cur_timer(task_name)
+        self.timer.get_current_diff(task_name)
     ################
     # End of Timer #
     ################

@@ -11,8 +11,11 @@
     <link rel="stylesheet" type="text/css" href="../static/css/timer_management.css">
 
     <!-- Javascript Includes (in alphabetical order)-->
+    <script type="module" src="../static/js/dropdowns.js"></script>
+    <script type="module" src="../static/js/dynamic-intervals.js"></script>
     <script type="module" src="../static/js/initialize-page.js"></script>
     <script src="../static/js/jquery-3.5.1.min.js"></script>
+    <script type="module" src="../static/js/repeating-objects.js"></script>
     <script type="module" src="../static/js/server-messages.js"></script>
     <script src="../static/js/socket-io-1.4.5.min.js"></script>
     <script type="module" src="../static/js/task-selection.js"></script>
@@ -39,6 +42,9 @@
                 <button class="timer-button" id="start-timer" disabled>Start Stopwatch</button>
                 <button class="timer-button" id="stop-timer" disabled>Stop Stopwatch</button>
             </div>
+            <div class="space-row"></div>
+            <p class="prompt-header">Running Stopwatch</p>
+            <input readonly id="stopwatch" disabled placeholder="Stopwatch must be running">
         </div>
         <div class="flex-column main-columns" id="time-display">
             <p>Time Display</p>
