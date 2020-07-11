@@ -3,28 +3,13 @@
  * File responsible for responding to socket emissions
  */
 
-$(document).ready(() =>{
-    const url_connecting_to = "http://" + document.domain + ":" + location.port;
-    const socket = io.connect(url_connecting_to);
-
-    socket.on('update_info', (response) => {
-        const text_area = document.getElementById('general-info');
-        text_area.value = response.info;
-    });
-
-    // Below are all the socket emissions being waited on. Can be called using send_to_client() in python
-    socket.on('stop_timer_diff', (response) => {
-        const difference = response.difference;
-        const task       = response.task;
-        const start_time = response.start_time;
-        const stop_time  = response.stop_time;
-        const text_area = document.getElementById('general-info');
-
-        let msg = "Task " + task + ":" + "\n----------------------\n";
-        msg += "\nStart: " + start_time + "\nStop: "+ stop_time + "\nDifference: " + difference + " hours";
-        text_area.value = msg;
-
-    });
-});
-
-// meant for case when timer to short 
+/**
+ * @brief Creates a listener on the socket that executes the callback when data is sent up the socket for that name
+ * @param {String} event The flask message to wait for (must be named the same as the flask socket emit)
+ * @param {Function} callback A callback function that takes one argument -- response (JSON)
+ */
+export function create_socket_listener(event, callback) {
+    const socket_url = "http://" + document.domain + ":" + location.port;
+    const socket = io.connect(socket_url);
+    socket.on(event, callback);
+}

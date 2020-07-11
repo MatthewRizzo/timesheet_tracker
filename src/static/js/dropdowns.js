@@ -1,3 +1,4 @@
+"use strict"
 /**
  * @brief Function to create a class that abstracts common functions for dropdowns
  * @constructor (dropdown_element_id, placeholder_id)

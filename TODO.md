@@ -15,7 +15,6 @@
     3. On the top, show the total time spent on the task
     4. Every line after, show the start, stop, and diff of the run
     5. If necessary, add a scroll wheel
-4. sockets - make function for socket.on. pass it arg of name, {}, and callback (it takes resppnse as arg)
 
 ## Low Priority tasks once base functionality exists
 1. Make login so that multiple people can use program without seeing each other's data
