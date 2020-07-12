@@ -36,7 +36,10 @@ function display_times(){
  */
 export function make_time_display_header(){
     const return_json = {};
-    return_json.header = "Start\t\tStop\t\tDifference\n--------------------------------------------\n";
+    let header_msg = 'Time Format: HH:MM:SS\n';
+    header_msg += "Start\t\tStop\t\tDifference\n";
+    header_msg += "--------------------------------------------\n"
+    return_json.header = header_msg ;
     return_json.time_box  = document.getElementById('time-display-box');
     return return_json;
 }
