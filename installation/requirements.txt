@@ -8,5 +8,6 @@ pylint==2.5.3
 pyserial==3.4
 python-engineio==3.13.1
 python-socketio==4.6.0
+requests==2.24.0
 Werkzeug==1.0.1
 wrapt==1.12.1
