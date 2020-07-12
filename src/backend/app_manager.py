@@ -91,6 +91,13 @@ class AppManager():
             units = self.controller.time_units
             return jsonify({'total_time': total_time, 'units': units})
 
+        @self._app.route("/get_completed_times", methods=["POST"])
+        def get_completed_times():
+            task_name = request.get_json()['task']
+            units = self.controller.time_units
+            time_list = self.controller.get_completed_time_list(task_name)
+            return jsonify({'time_list': time_list, 'units': units})
+
     def _create_url(self):
         # TODO - make port dyanmic and ensure it is unused
         self._host_name = 'localhost'

@@ -54,7 +54,7 @@ class TimeManager():
 
     def display_time_diff(self, task_name):
         """Displays the time difference of the most recently completed start/stop set for the given task"""
-        for pairing in reversed(self._task_json[task_name]['time_pairings']):
+        for pairing in reversed(self.get_time_pairings(task_name)):
             time_diff = pairing[constants.TIME_PAIRINGS_INDICES['time_diff']]
             if time_diff is not None:
                 return time_diff
@@ -65,13 +65,33 @@ class TimeManager():
         cur_time = self._get_current_time()
         start_time = self.get_latest_start_time(task_name)
         
-        cur_diff_time = self.calculate_time_diff(start_time, cur_time)
+        cur_diff_time = self._calculate_time_diff(start_time, cur_time)
         return cur_diff_time
+
+    def get_completed_time_list(self, task_name):
+        """:brief Gets the list of completed time segments for the current task
+        \n:note If there are no completed tasks, it will return an empty list
+        """
+        # This is for the moment between the task's creation, and the backend not having created it's key yet
+        if task_name not in self._task_json:
+            return []
+
+        full_time_list = self.get_time_pairings(task_name)
+        stop_time_index = constants.TIME_PAIRINGS_INDICES['stop_time']
+
+        if len(full_time_list) == 0:
+            return []
+        # Check if the last time set is incomplete, if so exclude it 
+        elif full_time_list[-1][stop_time_index] is None:
+            return full_time_list[:-1]
+        else:
+            return full_time_list
+
 
     ######################
     # Private Functions  #
     ######################
-    def calculate_time_diff(self, start_time: datetime, end_time: datetime) -> float:
+    def _calculate_time_diff(self, start_time: datetime, end_time: datetime) -> float:
         """Given a start and end time, returns the time difference (in hours)"""
         start_time_striped = datetime.strptime(start_time, self._datetimeFormat)
         end_time_striped   = datetime.strptime(end_time, self._datetimeFormat)
@@ -80,12 +100,9 @@ class TimeManager():
         # Get hours passed. 
         seconds_passed = elapsed_time.total_seconds()
         if self._time_mode == 'law':
-            
             hours_passed = self._get_law_diff(seconds_passed)
-            
         else:
             hours_passed = round((seconds_passed / constants.SEC_PER_HOUR), 2)
-
         return hours_passed
 
     def _calculate_time_diff_at_end(self, task_name):
@@ -93,7 +110,7 @@ class TimeManager():
         
         start_time = self.get_latest_start_time(task_name)
         end_time   = self.get_latest_stop_time(task_name)
-        return self.calculate_time_diff(start_time, end_time)
+        return self._calculate_time_diff(start_time, end_time)
         
 
     def _get_current_time(self):
@@ -118,7 +135,7 @@ class TimeManager():
         # Common practice is to round that up to a full 6 minutes no matter what
         if self._fraction_mod(hours_remaining_float, constants.SIX_MINUTES_IN_HOURS) > 0:
             # proof: .52 mod .1 = .02 > 0
-            tenths_digit = str(int(tenths_digit) + 1)
+            tenths_digit = str(int(tenths_digit) + 1)[0]
         total_hours_passed_str = hours_passed_str + '.' + tenths_digit
         return float(total_hours_passed_str)
 
@@ -134,9 +151,12 @@ class TimeManager():
     #####################
     # Getters / Setters #
     #####################
+    def get_time_pairings(self, task_name):
+        return self._task_json[task_name]['time_pairings']
+
     def get_latest_times(self, task_name):
         """:brief Gets the latest existing start, stop, and diff times for the given task"""
-        return self._task_json[task_name]['time_pairings'][-1]
+        return self.get_time_pairings(task_name)[-1]
 
     def get_latest_start_time(self, task_name):
         return self.get_latest_times(task_name)[constants.TIME_PAIRINGS_INDICES['start_time']]

@@ -7,10 +7,12 @@ import { post_request, async_post_request } from './utils.js';
 import { DropdownManagement } from './dropdowns.js'
 import { enable_start_timer } from './task-selection.js'
 import { task_dropdown_object } from './repeating-objects.js';
-import { copy_tasks_to_display_dropdown } from './time-display.js';
+import { copy_tasks_to_display_dropdown, make_time_display_header } from './time-display.js';
 
 
 $(document).ready(async () =>{
+    const time_display_json = make_time_display_header();
+    time_display_json.time_box.value = time_display_json.header;
     await synchronize_task_dropdown();
 });
 

@@ -9,7 +9,7 @@ import { create_socket_listener } from './server-messages.js'
 import { async_post_request } from './utils.js'
 
 const wait_for_task_to_display = new DynamicInterval(wait_for_options, 100);
-const update_total_time_interval = new DynamicInterval(display_total_time, 500);
+const update_total_time_interval = new DynamicInterval(display_times, 500);
 
 
 $(document).ready(() => {
@@ -18,7 +18,31 @@ $(document).ready(() => {
 })
 
 /**
- * @brief controls when display_total_time's interval is activated. Once at least one option exists, wait_for_options is deactivated.
+ * @brief Wrapper function to update the total time and time list box's
+ */
+function display_times(){
+    display_total_time();
+    display_time_list();
+}
+
+/**
+ * @returns {{
+ *      time_box: HTMLElement, 
+ *      header: string,
+ * }} 
+ * The header of the time display and its container html element. 
+ *     The time box element to put the time sets in.
+ *     The string header to put in the display box
+ */
+export function make_time_display_header(){
+    const return_json = {};
+    return_json.header = "Start\t\tStop\t\tDifference\n--------------------------------------------\n";
+    return_json.time_box  = document.getElementById('time-display-box');
+    return return_json;
+}
+
+/**
+ * @brief controls when display_time's interval is activated. Once at least one option exists, wait_for_options is deactivated.
  */
 function wait_for_options() {
     if(display_dropdown_object.get_selected_option().value != display_dropdown_object.get_placeholder_element().value){
@@ -48,6 +72,33 @@ async function display_total_time (){
 }
 
 /**
+ * @brief Gets all completed time segments for the currently selected task and dispalys them
+ */
+async function display_time_list(){
+    // Get the time list and units from backend
+    const url = '/get_completed_times';
+    const task = display_dropdown_object.get_selected_option().value;
+    const data = {'task': task};
+    const response = await async_post_request(url, data);
+    const time_list = response.time_list;
+    const units =     response.units;
+
+    // Display the results where appropriate
+    const display_json = make_time_display_header();
+    let display_msg = display_json.header;
+    if(time_list != null){
+        for(let time_set of time_list){
+            const start_time = time_set[0];
+            const end_time   = time_set[1];
+            const diff_time  = time_set[2];
+            display_msg += start_time + "\t" + end_time + '\t' + diff_time;
+            display_msg += '\n';
+        }
+    }
+    display_json.time_box.value = display_msg;
+}
+
+/**
  * Every time the task selection dropdown is changed, the Time Display Dropdown needs to be modified to match
  * @precondition The Task Selection dropdown has been sorted
  */
@@ -64,4 +115,5 @@ export function copy_tasks_to_display_dropdown(){
 
     display_dropdown_object.set_selected(selected_value_before);
     display_total_time();
+    display_time_list();
 }

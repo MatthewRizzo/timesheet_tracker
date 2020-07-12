@@ -55,7 +55,14 @@ class BackendController():
         """Interface function between app_manager and time_manager for getting a tasks total time"""
         total_time = self.timer.get_total_time(task_name)
         return total_time
-        
+
+    def get_completed_time_list(self, task_name):
+        """Interface function between app_manager and time_manager 
+        for getting all of the completed time segements of a given task"""
+        task_list = self.timer.get_completed_time_list(task_name)
+        return task_list
+
+
     ################
     # End of Timer #
     ################
