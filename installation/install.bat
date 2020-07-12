@@ -9,7 +9,6 @@ set script_loc=%~dp0
 cd %script_loc%
 cd ..
 
-@echo off
 set project_root_dir=%CD%
 
 :: Delete any currently existing venv's

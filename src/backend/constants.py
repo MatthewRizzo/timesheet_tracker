@@ -4,6 +4,9 @@ SEC_PER_HOUR = 3600
 SEC_PER_MIN  = 60
 SIX_MINUTES_IN_HOURS = .1 # 6 min = .1 hr 
 
+# Thread Periods (in seconds)
+LOGGER_THREAD_PERIOD = 10
+
 
 # Time management constants
 TIME_PAIRINGS_INDICES = {

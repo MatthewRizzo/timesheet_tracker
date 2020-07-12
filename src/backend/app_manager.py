@@ -1,4 +1,5 @@
 """File responsible for all flask routes"""
+# -- External Packages -- #
 import flask
 from flask import request, Flask, render_template, send_from_directory, jsonify
 from flask_socketio import SocketIO
@@ -6,6 +7,7 @@ import logging
 import os
 import webbrowser
 
+# -- Project Defined Imports -- #
 from backend.backend_controller import BackendController
 
 class AppManager():

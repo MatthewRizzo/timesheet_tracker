@@ -1,5 +1,9 @@
-from backend.time_manager import TimeManager
+# -- External Packages -- #
+
+# -- Project Defined Imports -- #
 from backend import constants
+from backend.data_logger import DataLogger
+from backend.time_manager import TimeManager
 
 class BackendController():
     def __init__(self, send_to_client):
@@ -8,7 +12,7 @@ class BackendController():
         self.timer = TimeManager(self.mode)
 
         self.time_units = constants.TIME_UNITS_BY_MODE[self.mode]
-        # TODO - add a class to manage writing json to file / storing it elsewhere
+        self.logger = DataLogger()
 
     ##################
     # Task Selection #
