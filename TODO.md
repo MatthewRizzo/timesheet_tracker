@@ -9,6 +9,13 @@
 2. Make a threaded logging class
     1. Periodically writes the current time/data json to a file 
     2. Will require a thread lock/mutex on the data in the time_manager class
+3. Add ability to distinguish between users 
+    * I.e. their times would be different
+4. Add 'notes' section to time segements. 
+    * User could input a note before or during a time session
+    * That note would be stored with start time, stop time, diff time
+    * That note would be displayed in general information 
+    * That note would be dispalyed in the line item summary of time display
 
 ## Low Priority tasks once base functionality exists
 1. Make login so that multiple people can use program without seeing each other's data
