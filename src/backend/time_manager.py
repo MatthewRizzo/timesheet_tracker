@@ -43,13 +43,19 @@ class TimeManager():
         # The current tuple will always be the last one, and the end time is always the 2nd element
         # self.get_latest_times(task_name)[constants.TIME_PAIRINGS_INDICES['stop_time']] = self._get_current_time()
         self.set_latest_stop_time(task_name, self._get_current_time())
-        
         time_diff = self._calculate_time_diff_at_end(task_name)
 
         # Update the time difference for this pairing + total time
-        # self.get_latest_times(task_name)[constants.TIME_PAIRINGS_INDICES['time_diff']] = time_diff
         self.set_latest_diff_time(task_name, time_diff)
-        self._task_json[task_name]['total_time'] += time_diff
+        new_total_diff_time = self._task_json[task_name]['total_time'] + time_diff
+
+        # Adjust for potential issues
+        if self._time_mode == "law":
+            new_total_diff_time = self.total_time_diff_calc_law(new_total_diff_time)
+        
+        # Set the total time after any adjustements are made
+        self._task_json[task_name]['total_time'] = new_total_diff_time
+
         self._is_timer_active = False
 
     def display_time_diff(self, task_name):
@@ -146,8 +152,24 @@ class TimeManager():
             \n- The proof for this came from https://math.stackexchange.com/questions/864568/is-it-possible-to-do-modulo-of-a-fraction 
         \n:return The result of the mod
         """
+        value = float(value)
+        modulus = float(modulus)
         division = math.floor(value/modulus)
-        return value - (modulus * division)
+        return value - (division * modulus)
+
+    def total_time_diff_calc_law(self, new_total_time_diff):
+        """:brief Calculating the total difference time for law is harder due to it being prone to floating point errors.
+        This function works to account for, and fix that problem
+        """
+        # Make sure there is only 1 decimal place - in testing floating point errors made total go beyond that
+        hours, decimal = str(new_total_time_diff).split(".", maxsplit=1)
+
+        # Floating point error also sometimes leaves digits after .1. Check for that and add round accordingly
+        shifted_dec = float(decimal[0] + "." + decimal[1:])
+        fixed_dec_str = str(round(shifted_dec, 0))
+
+        recreataed_diff_str = hours + "." + fixed_dec_str[0]
+        return float(recreataed_diff_str)
     #####################
     # Getters / Setters #
     #####################
