@@ -1,5 +1,12 @@
+# Ignores related to python
 __pycache__/
+
+# Ignores related to venvs
 **virtual_environment/
 **virtual_environment_windows/
 **virtual_environment_linux/
 **pyvenv.cfg
+
+
+# Ignores related to logging / data 
+**stored_results/

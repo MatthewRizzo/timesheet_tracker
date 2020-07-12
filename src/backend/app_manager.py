@@ -15,6 +15,9 @@ class AppManager():
     def __init__(self):
         self._setup_app_config()
 
+        # TODO - implement a way for users to login. It will change this variable (will have to propoagate to backend as well)
+        self._user = "General"
+
         # TODO - have this get controlled via an input
         self._debug = False
 
@@ -23,7 +26,7 @@ class AppManager():
 
         self._create_url()
 
-        self.controller = BackendController(self._send_to_client)
+        self.controller = BackendController(self._send_to_client, self._user)
 
         # Setup App Routes
         self._create_mainpage_routes()

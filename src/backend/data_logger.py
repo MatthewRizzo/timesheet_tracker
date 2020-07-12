@@ -1,21 +1,33 @@
 # -- External Packages -- #
 import threading
 import time
+import json
+import os
+from pathlib import Path
 
 # -- Project Defined Imports -- #
 from backend import constants
 
 class DataLogger(threading.Thread):
-    def __init__(self):
+    def __init__(self, user: str, get_data_func, path_to_project_root: Path):
         """:brief Responsible for logging all existing data to an external file. Updates the file once every thread period
+        \n:param get_data_func - A function that is capable of getting the current data from time_manager.py
         """
+        # threading defines
         threading.Thread.__init__(self)
-
-        # Its isSet() can be used to check if thread has closed
-        self._thread_status = threading.Event()
-        self._worker = threading.Thread(target = self._thread_function)
+        self._thread_status = threading.Event() # Its isSet() can be used to check if thread has closed
+        self._worker = threading.Thread(target = self.__thread_function)
         self._worker.daemon = True
-        
+    
+        # Save inputs to class
+        self._user = user
+        self._get_data_func = get_data_func
+        self._path_to_project_root = path_to_project_root
+
+        # Class Variables
+        self._path_to_json_dir = self._path_to_project_root.joinpath(constants.PATH_TO_DATA, self._user)
+        self._path_to_json = self._path_to_json_dir.joinpath(constants.DATA_JSON_NAME)
+
         # TODO: Decide if this call should be moved to backend controller / under which cases it gets called
         self.start_thread()
         
@@ -37,8 +49,25 @@ class DataLogger(threading.Thread):
     ######################
     # Private Functions  #
     ######################
-    def _thread_function(self):
+    def __thread_function(self):
+        """:Note Worker function - DO NOT call this function anywhere
+        \n:brief - On worker wakeup, periodically writes the contents of the applications data to a json
+        """
         while not self._thread_status.isSet():
             # This controls the thread period / how often it runs
             time.sleep(constants.LOGGER_THREAD_PERIOD)
-            print("Thread called")
+            current_data = self._get_data_func()
+            print(current_data)
+            self._write_data(current_data)
+
+    def _write_data(self, data_to_write: dict()):
+        """:brief writes the data to the file
+        """
+        
+        
+        if self._path_to_json.exists() is False:
+            self._path_to_json_dir.mkdir(parents=True, exist_ok=True)
+
+        print(f"Writing to {self._path_to_json}")
+        with open(self._path_to_json, 'w') as json_file:
+            json.dump(data_to_write, json_file)

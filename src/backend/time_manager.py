@@ -1,5 +1,7 @@
 # -- External Packages -- #
+from copy import deepcopy
 from datetime import datetime, timedelta
+import threading
 import math
 
 # -- Project Defined Imports -- #
@@ -8,12 +10,15 @@ from backend import constants
 class TimeManager():
     def __init__(self, mode):
         self._task_json = dict()
+        self._task_json_lock = threading.Lock() # Used to help access task json from other threads
 
         self._datetimeFormat = '%H:%M:%S'
         self._is_timer_active = False
 
         # TODO - change this to have many modes. Default to law because that is the initial purpose of this program
         self._time_mode = mode
+
+        # TODO - put another layer before task_name (user).
 
     #####################
     # Public Functions  #
@@ -66,6 +71,20 @@ class TimeManager():
             time_diff = pairing[constants.TIME_PAIRINGS_INDICES['time_diff']]
             if time_diff is not None:
                 return time_diff
+
+    def get_all_data(self) -> dict():
+        """:brief Function to safely return a copy of the task json.
+        \n:Note acquires a lock on the json to prevent concurrency issues"""
+        # TODO - make this get_users_data and have it only retunr data for a given user
+        # Get a lock to prevent other functions, reads, writes to the json during this process
+        self._task_json_lock.acquire()
+
+        copied_json = deepcopy(self._task_json)
+
+        # The lock is no longer needed
+        self._task_json_lock.release()
+
+        return copied_json
 
     def get_current_diff(self, task_name) -> float:
         """Utility function. While timer active, calculate current time it has been running for.

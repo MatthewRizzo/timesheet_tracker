@@ -1,4 +1,5 @@
 # -- External Packages -- #
+import pathlib
 
 # -- Project Defined Imports -- #
 from backend import constants
@@ -6,13 +7,17 @@ from backend.data_logger import DataLogger
 from backend.time_manager import TimeManager
 
 class BackendController():
-    def __init__(self, send_to_client):
+    def __init__(self, send_to_client, user: str):
         self.send_to_client = send_to_client
-        self.mode = "law" # TODO: make this an input to the file
-        self.timer = TimeManager(self.mode)
+        self._mode = "law" # TODO: make this an input to the file
+        self._user = user # TODO - Each user will get their own instance of the backend controller class
 
-        self.time_units = constants.TIME_UNITS_BY_MODE[self.mode]
-        self.logger = DataLogger()
+        self._path_to_project_root = self._get_project_root_path() 
+
+        self.timer = TimeManager(self._mode)
+
+        self.time_units = constants.TIME_UNITS_BY_MODE[self._mode]
+        self.logger = DataLogger(user=self._user, get_data_func=self.get_time_data, path_to_project_root=self._path_to_project_root)
 
     ##################
     # Task Selection #
@@ -71,4 +76,29 @@ class BackendController():
     # End of Timer #
     ################
 
-    
+    ###############
+    # Data Logger #
+    ###############
+    def get_time_data(self) -> dict():
+        """:brief Function to handle getting the stored data from time_manager and returning it to whatever is calling it
+        \n:return The data stored in time_manager
+        """
+        data = self.timer.get_all_data()
+        return data
+
+    ######################
+    # End of Data Logger #
+    ######################
+
+
+    ######################
+    # Private Functions  #
+    ######################
+    def _get_project_root_path(self) -> pathlib.Path:
+        # Includes the file name
+        path_to_current_file = pathlib.Path(__file__) 
+        
+        # Need to go up 2 dirs + 1 file to get to project root
+        file_path_no_filename = path_to_current_file.parent
+        file_path_to_root = file_path_no_filename.parent.parent 
+        return file_path_to_root

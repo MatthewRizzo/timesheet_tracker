@@ -17,6 +17,7 @@
     * That note would be displayed in general information 
     * That note would be dispalyed in the line item summary of time display
 5. Make a calendar view mode
+6. Have a clean/dirty flag to prevent unnecessary writes to json if nothing has changed for a given user's data
 
 
 ## Low Priority tasks once base functionality exists
