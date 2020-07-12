@@ -13,7 +13,7 @@ rm -rf $project_root_dir/virtual_environment_linux
 
 # Create the venv
 echo Creating the virtual environment
-$project_root_dir/python3.7 -m venv virtual_environment_linux
+python3.7 -m venv virtual_environment_linux
 
 # Setup Path's relative to project root
 venv_dir_name='virtual_environment_linux'

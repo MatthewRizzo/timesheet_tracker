@@ -2,13 +2,21 @@
 
 This code will keep track of timespent on a task(s) through a UI with a start/stop botton.
 
-## How to use it
-* All you need is python!! 
-* Package Versions??? Eventually a virtual environment will be added.
-    * For now, just make sure you pip every module in installation/requirements.txt.
-    * This is easily doable by running installation/install.bat (Windows) or installation/install.sh (Linux)
-* Use the run.bat (windows) or run.sh (linux) file to start up the program. 
-* Enjoy having a streamlined process to keep track of tasks for your timesheets!!!!
+## How to Setup / Run the Timesheet Tracker
+* All you need is python3.7 or greater!! 
+* After cloning the Repository **(This only needs to be done once)**:
+    1. Navigate to the installation folder
+    2. run install.bat (windows) or ./install.sh (linux)
+        * These will create a virtual environment within the project for you
+        * This is the only setup you need to do
+* How to run:
+    * Execute run.bat (windows) or ./run.sh (linux)
+    * They will use the virtual environments created by the install scripts
+* How to update:
+    * Make sure you are on the Master branch of the repository
+    * Pull for any changes
+    * Rerun the install scripts
+    * Done!!!
 
 ## Front-end
 
