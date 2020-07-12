@@ -11,10 +11,10 @@
     2. Will require a thread lock/mutex on the data in the time_manager class
 3. Add to Time Display
     * [x] Dropdown identical to contents of task selection dropdown
-    * [ ] The selected dropdown controls which task's data is shown
+    * [x] The selected dropdown controls which task's data is shown
     * [x] On the top, show the total time spent on the task
-    * [ ] Every line after, show the start, stop, and diff of the run
-    * [ ] If necessary, add a scroll wheel
+    * [x] Every line after, show the start, stop, and diff of the run
+    * [x] If necessary, add a scroll wheel
 
 ## Low Priority tasks once base functionality exists
 1. Make login so that multiple people can use program without seeing each other's data

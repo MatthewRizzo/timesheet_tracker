@@ -91,7 +91,7 @@ async function display_time_list(){
             const start_time = time_set[0];
             const end_time   = time_set[1];
             const diff_time  = time_set[2];
-            display_msg += start_time + "\t" + end_time + '\t' + diff_time;
+            display_msg += start_time + "\t" + end_time + '\t' + diff_time + ' ' + units;
             display_msg += '\n';
         }
     }
