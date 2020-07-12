@@ -2,6 +2,14 @@
 
 This code will keep track of timespent on a task(s) through a UI with a start/stop botton.
 
+## How to use it
+* All you need is python!! 
+* Package Versions??? Eventually a virtual environment will be added.
+    * For now, just make sure you pip every module in installation/requirements.txt.
+    * This is easily doable by running installation/install.bat (Windows) or installation/install.sh (Linux)
+* Use the run.bat (windows) or run.sh (linux) file to start up the program. 
+* Enjoy having a streamlined process to keep track of tasks for your timesheets!!!!
+
 ## Front-end
 
 Consists of the "Task Selection", "Timer", and "Time Display" sections.
