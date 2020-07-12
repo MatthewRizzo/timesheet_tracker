@@ -9,12 +9,6 @@
 2. Make a threaded logging class
     1. Periodically writes the current time/data json to a file 
     2. Will require a thread lock/mutex on the data in the time_manager class
-3. Add to Time Display
-    * [x] Dropdown identical to contents of task selection dropdown
-    * [x] The selected dropdown controls which task's data is shown
-    * [x] On the top, show the total time spent on the task
-    * [x] Every line after, show the start, stop, and diff of the run
-    * [x] If necessary, add a scroll wheel
 
 ## Low Priority tasks once base functionality exists
 1. Make login so that multiple people can use program without seeing each other's data
