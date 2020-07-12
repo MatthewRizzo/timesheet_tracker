@@ -1,10 +1,10 @@
-# Activate the venv to activate it
+# Store the start loc to go back to it when done
 start_loc=$PWD
 
-# Go to project root
+# Go to project root - navigate to the installation folder and backup one to get to project root
+script_dir_path=$(cd `dirname $0` && pwd)
+cd $script_dir_path
 cd ../
-
-# Setup Pathing variables
 project_root_dir=$PWD
 
 # Delete any currently existing venv's
@@ -27,12 +27,12 @@ echo Moving to bin at $venv_bin_path
 cd $venv_bin_path
 
 # Just in case, update pip
-echo upgrading pip
+echo Upgrading pip
 $venv_bin_path/$pip_script install --upgrade pip
 
 # Install the modules (with their correct versions) to the venv
 echo Installing modules
-$venv_bin_path/$pip_script install -r $start_loc/requirements.txt
+$venv_bin_path/$pip_script install -r $project_root_dir/installation/requirements.txt
 
 # Go back to starting location after install complete
 cd $start_loc
