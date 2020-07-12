@@ -1,20 +1,36 @@
 set start_loc=%CD%
-cd ../
-set venv_dir_name=virtual_environment
+:: Go to project root
+cd ..
+
+@echo off
 set project_root_dir=%CD%
-set venv_root_path=%project_root_dir%\%venv_dir_name%
-set venv_scripts_path=%venv_root_path%\Scripts\
-set python_program=python.exe
+
+:: Delete any currently existing venv's
+rmdir /S /Q %project_root_dir%\virtual_environment_windows
+@echo on
 
 :: Create the venv
-python -m venv %venv_root_path%
+python -m venv virtual_environment_windows
+
+@echo off
+:: Setup the variables relative to the venv
+set venv_dir_name=virtual_environment_windows
+set venv_root_path=%project_root_dir%\%venv_dir_name%
+set venv_scripts_path=%venv_root_path%\Scripts\
+
+:: This needs to be what the python executable in the venv is called
+set python_program=python.exe
+@echo on
 
 cd %venv_scripts_path%
 
 :: Just in case, update pip
+echo Updating Pip
 %python_program% -m pip install --upgrade pip
 
 :: Install the modules (with their correct versions) to the venv
-%python_program% -m pip install -r %start_loc%/requirements.txt
+echo Installing python modules
+%python_program% -m pip install -r %start_loc%\requirements.txt
 
+:: Go back to starting location after install complete
 cd %start_loc%

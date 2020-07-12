@@ -16,6 +16,8 @@
     * That note would be stored with start time, stop time, diff time
     * That note would be displayed in general information 
     * That note would be dispalyed in the line item summary of time display
+5. Make a calendar view mode
+
 
 ## Low Priority tasks once base functionality exists
 1. Make login so that multiple people can use program without seeing each other's data

@@ -1,2 +1,5 @@
 __pycache__/
 **virtual_environment/
+**virtual_environment_windows/
+**virtual_environment_linux/
+**pyvenv.cfg
