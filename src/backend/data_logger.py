@@ -29,7 +29,7 @@ class DataLogger(threading.Thread):
         self._path_to_json = self._path_to_json_dir.joinpath(constants.DATA_JSON_NAME)
 
         # TODO: Decide if this call should be moved to backend controller / under which cases it gets called
-        # self.start_thread()
+        self.start_thread()
         
 
     #####################

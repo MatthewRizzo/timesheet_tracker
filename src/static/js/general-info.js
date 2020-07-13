@@ -15,22 +15,30 @@ $(document).ready(() =>{
  * 
  * @param  {JSON} response Has the key info  which is message printed
  * @brief Updates the General Information box with the 
+ * @note Should be the ONLY function by which the General Information tab's text is modified 
  */
 function update_info(response){
+    const seperator = "\n---------------------------------------\n\n";
     const text_area = document.getElementById('general-info');
-    text_area.value = response.info;
-}
+    const prev_text = text_area.value;
 
-update_info()
+    const new_text = prev_text + response.info + seperator;
+
+    // Clear the text area and set it to the new text
+    text_area.value = '';
+    text_area.value += new_text;
+}
 
 function display_time_diff_after_stop(response){
     const difference = response.difference;
     const task       = response.task;
     const start_time = response.start_time;
     const stop_time  = response.stop_time;
-    const text_area = document.getElementById('general-info');
-
-    let msg = "Task " + task + ":" + "\n----------------------\n";
+    const response_json = {};
+    
+    let msg = "Task " + task + ":" + "\n";
     msg += "\nStart: " + start_time + "\nStop: "+ stop_time + "\nDifference: " + difference + " hours";
-    text_area.value = msg;
+    response_json.info = msg;
+
+    update_info(response_json);
 }
