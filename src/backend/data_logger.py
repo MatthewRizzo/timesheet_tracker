@@ -29,7 +29,7 @@ class DataLogger(threading.Thread):
         self._path_to_json = self._path_to_json_dir.joinpath(constants.DATA_JSON_NAME)
 
         # TODO: Decide if this call should be moved to backend controller / under which cases it gets called
-        self.start_thread()
+        # self.start_thread()
         
 
     #####################
@@ -46,6 +46,16 @@ class DataLogger(threading.Thread):
         self._thread_status.set()
         self._worker.join()
 
+    def get_data_in_file(self) -> dict():
+        """:brief Function used on startup of the system to get the data stored in the file
+        :Note This function should ONLY be called once per user
+        :return - The data from the data json
+        """
+        data = dict()
+        with open(self._path_to_json, 'r') as json_file:
+            data = json.load(json_file)
+        return data
+
     ######################
     # Private Functions  #
     ######################
@@ -57,17 +67,13 @@ class DataLogger(threading.Thread):
             # This controls the thread period / how often it runs
             time.sleep(constants.LOGGER_THREAD_PERIOD)
             current_data = self._get_data_func()
-            print(current_data)
             self._write_data(current_data)
 
     def _write_data(self, data_to_write: dict()):
-        """:brief writes the data to the file
-        """
-        
+        """:brief writes the data to the file"""
         
         if self._path_to_json.exists() is False:
             self._path_to_json_dir.mkdir(parents=True, exist_ok=True)
 
-        print(f"Writing to {self._path_to_json}")
         with open(self._path_to_json, 'w') as json_file:
-            json.dump(data_to_write, json_file)
+            json.dump(data_to_write, json_file, indent=4)

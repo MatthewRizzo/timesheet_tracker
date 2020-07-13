@@ -11,10 +11,17 @@ $(document).ready(() =>{
 
 })
 
+/**
+ * 
+ * @param  {JSON} response Has the key info  which is message printed
+ * @brief Updates the General Information box with the 
+ */
 function update_info(response){
     const text_area = document.getElementById('general-info');
     text_area.value = response.info;
 }
+
+update_info()
 
 function display_time_diff_after_stop(response){
     const difference = response.difference;

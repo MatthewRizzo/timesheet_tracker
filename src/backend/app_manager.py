@@ -50,6 +50,14 @@ class AppManager():
         def favicon():
             return send_from_directory(self._images_dir, 'stopwatch.png', mimetype='image/vnd.microsoft.icon')
 
+        @self._app.route("/load_data_at_startup", methods=["POST"])
+        def load_data_at_startup():
+            try:
+                self.controller.load_in_data_at_startup()
+                return jsonify("ACK")
+            except:
+                return jsonify("NACK")
+
     def _create_task_selection_routes(self):
         """Function responsible for all routes in the Task Selection Panel"""
         @self._app.route('/add_task', methods=['POST'])
@@ -64,7 +72,7 @@ class AppManager():
         @self._app.route('/get_task_list', methods=['POST', 'GET'])
         def get_task_list():
             task_list = self.controller.get_task_list()
-            
+            self._send_to_client('update_info', {'info': 'Loaded data from previous runs of the program'})
             return jsonify({'task_list': task_list})
 
     def _create_timer_routes(self):

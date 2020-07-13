@@ -86,6 +86,14 @@ class TimeManager():
 
         return copied_json
 
+    def load_in_previous_data(self, data: dict):
+        """:brief Load in data to the task_json (usually at startup)"""
+        
+        self._task_json_lock.acquire()
+        self._task_json = data
+
+        self._task_json_lock.release()
+
     def get_current_diff(self, task_name) -> float:
         """Utility function. While timer active, calculate current time it has been running for.
         \n:return The time Difference (in hours)"""

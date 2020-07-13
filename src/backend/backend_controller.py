@@ -42,6 +42,11 @@ class BackendController():
     ##################
     # Timer Wrappers #
     ##################
+    def load_in_data_at_startup(self):
+        """Wrapper function to get the data stored in the file and save it in the timer object"""
+        data_to_load = self.get_data_at_startup()
+        self.timer.load_in_previous_data(data_to_load)
+
     def start_timer(self, task_name):
         """Interface function between app_manager and time_manager for starting the timer"""
         self.timer.start_timer(task_name)
@@ -71,7 +76,6 @@ class BackendController():
         task_list = self.timer.get_completed_time_list(task_name)
         return task_list
 
-
     ################
     # End of Timer #
     ################
@@ -82,9 +86,16 @@ class BackendController():
     def get_time_data(self) -> dict():
         """:brief Function to handle getting the stored data from time_manager and returning it to whatever is calling it
         \n:return The data stored in time_manager
+        \n:Note Used by data logger to get the data to save
         """
         data = self.timer.get_all_data()
         return data
+
+    def get_data_at_startup(self) -> dict():
+        """:brief Gets the data stored in the file at startup
+        :return The data stored in the file from another run of the program"""
+        return self.logger.get_data_in_file()
+
 
     ######################
     # End of Data Logger #

@@ -13,7 +13,9 @@ import { copy_tasks_to_display_dropdown, make_time_display_header } from './time
 $(document).ready(async () =>{
     const time_display_json = make_time_display_header();
     time_display_json.time_box.value = time_display_json.header;
+    await startup_load_data();
     await synchronize_task_dropdown();
+
 });
 
 /**
@@ -39,4 +41,18 @@ async function synchronize_task_dropdown(){
     }
     task_dropdown_object.maintain_alphabetical_order(dropdown_id);
     enable_start_timer(task_dropdown_object);
+}
+
+/**
+ * @brief Tells backend to load any data stored from previous runs into its time manager
+ */
+async function startup_load_data(){
+    const url = "load_data_at_startup";
+    const load_data_response = await async_post_request(url, {});
+
+    if(load_data_response == 'NACK'){
+        alert("There was an issue loading in previous data. Please restart the program / contact a developer")
+        return
+    }
+
 }
