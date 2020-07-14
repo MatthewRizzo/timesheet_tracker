@@ -15,12 +15,19 @@
     * That note would be dispalyed in the line item summary of time display
 4. Make a calendar view mode
 5. Have a clean/dirty flag to prevent unnecessary writes to json if nothing has changed for a given user's data
+6. Save Users + credentials to a database (that is gitignored)
+    * Pull from this file on startup (prevent having to reregister)
+    * Makes looking through users not O(n) because lookup times are faster 
 
 
 ## Low Priority tasks once base functionality exists
 1. Make login so that multiple people can use program without seeing each other's data
 2. Change local host to a custom name like "Timekeeper"
 3. Make pressing enter while in Enter New Task input also submit the task
-4. Make the calculation mode and debug mode get controlled by flags (use argparse)
-5. Find a way to turn of get_all_time in time-display.js when the stop watch is not running 
+4. Make the debug mode get controlled by flags (use argparse)
+5. Make the calculation mode get controlled by dropdown
+    * Which mode a user defaults do should get stored in their task json and get loaded in on start
+6. Find a way to turn of get_all_time in time-display.js when the stop watch is not running 
     * temporarily turn it back on if the dropdown menu every changes
+7. make automatically openning the webpage happen via flag
+    * Once deployed, every service start a new tab will be opened

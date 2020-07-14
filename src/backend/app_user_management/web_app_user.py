@@ -12,9 +12,14 @@ class WebAppUser(UserMixin):
 
     """
     def __init__(self, username: str, password: str, user_unique_id, send_to_client_func: function):
+        # A user is mostly the backend controller wrapped around identifiers for the account
         self.username = username
         self.password = password
         self.backend_controller = BackendController(send_to_client=send_to_client_func, username=self.username)
 
         # Required by extension of UserMixin 
         self.id = user_unique_id 
+
+    def check_password(self, password) -> bool:
+        """:return True if the password is correct for this user """
+        return self.password == password

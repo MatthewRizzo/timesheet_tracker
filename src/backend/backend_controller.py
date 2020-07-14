@@ -7,17 +7,20 @@ from backend.data_logger import DataLogger
 from backend.time_manager import TimeManager
 
 class BackendController():
-    def __init__(self, send_to_client, user: str):
+    def __init__(self, send_to_client, username: str):
+        """:brief Class to provide wrappers over the entire backend capability. Each user will get their own BackendController
+        \n:param send_to_client - The function from app_manager capable of sending messages up a socket to the frontend
+        """
         self.send_to_client = send_to_client
         self._mode = "law" # TODO: make this an input to the file
-        self._user = user # TODO - Each user will get their own instance of the backend controller class
+        self._username = username
 
-        self._path_to_project_root = self._get_project_root_path() 
+        self._path_to_project_root = constants.ABS_PATH_TO_PROJECT_ROOT 
 
         self.timer = TimeManager(self._mode)
 
         self.time_units = constants.TIME_UNITS_BY_MODE[self._mode]
-        self.logger = DataLogger(user=self._user, get_data_func=self.get_time_data, path_to_project_root=self._path_to_project_root)
+        self.logger = DataLogger(user=self._username, get_data_func=self.get_time_data, path_to_project_root=self._path_to_project_root)
 
     ##################
     # Task Selection #
@@ -105,11 +108,3 @@ class BackendController():
     ######################
     # Private Functions  #
     ######################
-    def _get_project_root_path(self) -> pathlib.Path:
-        # Includes the file name
-        path_to_current_file = pathlib.Path(__file__) 
-        
-        # Need to go up 2 dirs + 1 file to get to project root
-        file_path_no_filename = path_to_current_file.parent
-        file_path_to_root = file_path_no_filename.parent.parent 
-        return file_path_to_root

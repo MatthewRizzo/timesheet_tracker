@@ -10,3 +10,4 @@ __pycache__/
 
 # Ignores related to logging / data 
 **stored_results/
+**user_data_dir/

@@ -9,7 +9,7 @@ from pathlib import Path
 from backend import constants
 
 class DataLogger(threading.Thread):
-    def __init__(self, user: str, get_data_func, path_to_project_root: Path):
+    def __init__(self, username: str, get_data_func, path_to_project_root: Path):
         """:brief Responsible for logging all existing data to an external file. Updates the file once every thread period
         \n:param get_data_func - A function that is capable of getting the current data from time_manager.py
         """
@@ -20,12 +20,12 @@ class DataLogger(threading.Thread):
         self._worker.daemon = True
     
         # Save inputs to class
-        self._user = user
+        self._username = username
         self._get_data_func = get_data_func
         self._path_to_project_root = path_to_project_root
 
         # Class Variables
-        self._path_to_json_dir = self._path_to_project_root.joinpath(constants.PATH_TO_DATA, self._user)
+        self._path_to_json_dir = constants.RESULT_DATA_DIR_PATH.joinpath(self._username)
         self._path_to_json = self._path_to_json_dir.joinpath(constants.DATA_JSON_NAME)
 
         # TODO: Decide if this call should be moved to backend controller / under which cases it gets called
