@@ -1,9 +1,9 @@
 #!/bin/bash
 
-[[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]] && isWindows=true || isWindows=false
+[[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]] && is_windows=true || is_windows=false
 
 # if linux, need to check if using correct permissions
-if [[ "${isWindows}" = false ]]; then
+if [[ "${is_windows}" = false ]]; then
     if [ "$EUID" -ne 0 ]; then
         echo "Please run as root ('sudo')"
         exit
@@ -49,3 +49,16 @@ service_file=$(find ${service_file_dir} -maxdepth 1 -name "*-app*" -print)
 servic_file_name=$(basename "${service_file}")
 cp ${service_file} ${sys_service_dir}/
 echo "-- Deployed ${service_file} -> ${sys_service_dir}/${servic_file_name}"
+
+
+# Start service after everything installed if linux
+if [[ "${is_windows}" = false ]]; then
+    echo "Starting Service"
+    echo "-- Stopping ${servic_file_name} Daemon"
+    systemctl stop ${servic_file_name} # stop daemon
+    echo "-- Stopped ${servic_file_name} Daemon"
+    systemctl daemon-reload # refresh service daemons
+    echo "-- Reloaded ${servic_file_name} Daemon"
+    systemctl start ${servic_file_name} # start daemon
+    echo "-- Started ${servic_file_name} Daemon"
+fi
