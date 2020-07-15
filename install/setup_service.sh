@@ -18,7 +18,7 @@ project_root_dir="$(readlink -fm ${THIS_FILE_DIR}/..)"
 cd $install_dir_path
 
 # Call the install file to make sure all environment factors are setup
-sudo ./$install_dir_path/install.sh
+sudo $install_dir_path/install.sh
 
 # Create variable for path to environment file
 # Info grabbed from https://serverfault.com/a/413408 to make a safe server service
