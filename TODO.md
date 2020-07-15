@@ -37,3 +37,4 @@
 7. make automatically openning the webpage happen via flag
     * Once deployed, every service start a new tab will be opened
 8. Add mode to registration questions
+9. Fix Werkzeug wrapper to allow for ctrl+c and ctrl+z to kill the server/app process

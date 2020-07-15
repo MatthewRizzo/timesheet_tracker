@@ -20,7 +20,7 @@ class BackendController():
         self.timer = TimeManager(self._mode)
 
         self.time_units = constants.TIME_UNITS_BY_MODE[self._mode]
-        self.logger = DataLogger(user=self._username, get_data_func=self.get_time_data, path_to_project_root=self._path_to_project_root)
+        self.logger = DataLogger(username=self._username, get_data_func=self.get_time_data, path_to_project_root=self._path_to_project_root)
 
     ##################
     # Task Selection #

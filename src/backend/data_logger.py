@@ -25,7 +25,7 @@ class DataLogger(threading.Thread):
         self._path_to_project_root = path_to_project_root
 
         # Class Variables
-        self._path_to_json_dir = constants.RESULT_DATA_DIR_PATH.joinpath(self._username)
+        self._path_to_json_dir = constants.PATH_TO_RESULT_DATA_DIR.joinpath(self._username)
         self._path_to_json = self._path_to_json_dir.joinpath(constants.DATA_JSON_NAME)
 
         # TODO: Decide if this call should be moved to backend controller / under which cases it gets called

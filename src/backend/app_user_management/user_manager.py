@@ -46,7 +46,7 @@ class UserManager():
     def add_user(self, username, password):
         """:brief given a username and password, creates a valid WebAppUser and saves it in the users list"""
         # If the username is already being used, don't let this go through as is
-        if self.does_username_exist() is True:
+        if self.does_username_exist(username) is True:
             flash("Username is already taken. Please try again.")
         user_token = self._create_new_user_token()
 

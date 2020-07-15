@@ -99,7 +99,7 @@ class AppManager():
             if register_form.validate_on_submit():
                 username = register_form.username.data
                 password = register_form.password.data
-                self.user_manager.user_manager.add_user(username, password)
+                self.user_manager.add_user(username, password)
                 flash(f"Congratulations, user {username} is registered successfully. Please login to continue.")
                 return redirect(self.form_sites["login"])
             # Only gets here if the form is not validated. Restarts the registration process
