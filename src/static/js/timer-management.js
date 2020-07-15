@@ -4,16 +4,17 @@
  */
 import {async_post_request, post_request} from './utils.js';
 import { DynamicInterval } from './dynamic-intervals.js'
-import { DropdownManagement } from './dropdowns.js'
 import { task_dropdown_object } from './repeating-objects.js'
+import { create_socket_listener } from './server-messages.js'
 
 // Update the time display every .1 seconds
-const intervals = new DynamicInterval(display_current_difference, 100);
+const stopwatch_interval = new DynamicInterval(display_current_difference, 100);
 $(document).ready(async ()=>{
     const start_btn = document.getElementById('start-timer');
     const stop_btn =  document.getElementById('stop-timer');
     start_btn.addEventListener('click', start_timer);
     stop_btn.addEventListener('click', stop_timer);
+    create_socket_listener('logout', handle_logout)
 });
 
 
@@ -24,7 +25,7 @@ function start_timer(){
     const url = '/start_timer';
     const data = {'task': task};
     post_request(url, data);
-    intervals.activate_interval();
+    stopwatch_interval.activate_interval();
     
 }
 
@@ -35,7 +36,7 @@ function stop_timer(){
     const data = {'task': task};
     const url = '/stop_timer';
     post_request(url, data);
-    intervals.deactivate_interval();
+    stopwatch_interval.deactivate_interval();
 
 }
 
@@ -82,4 +83,11 @@ function toggle_timer_buttons(){
     else{
         stop_btn.disabled = true;
     }
+}
+
+/**
+ * @brief Cleans up anything created in this file that needs to be stopped/deleted on logout
+ */
+function handle_logout(){
+    stopwatch_interval.deactivate_interval();
 }

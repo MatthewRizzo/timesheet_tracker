@@ -45,3 +45,12 @@ export async function async_post_request(url, data_json) {
 
     return response
 }
+
+
+/**
+ * @return The root url of the appilcation (i.e. localhost:5000/)
+ */
+export function get_root_url(){
+    const url_root = "http://" + document.domain + ":" + location.port;
+    return url_root
+}

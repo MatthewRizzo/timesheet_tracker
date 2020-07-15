@@ -122,7 +122,12 @@ class TimeManager():
         else:
             return full_time_list
 
-
+    def logout(self):
+        """Function to handle the shutting down of the timer during logout"""
+        # Handle the case where a stopwatch is running and a user logs out - end the stop watch
+        if self._is_timer_active is True:
+            self.stop_timer()
+            
     ######################
     # Private Functions  #
     ######################

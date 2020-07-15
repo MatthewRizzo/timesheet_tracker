@@ -37,8 +37,6 @@ class AppManager():
         self._create_url()
         self.user_manager = UserManager(app=self._app, send_to_client_func=self._send_to_client)
 
-        # self.controller = BackendController(self._send_to_client, self._user)
-
         # Setup App Routes
         self.create_routes()
 
@@ -80,7 +78,6 @@ class AppManager():
         @self._app.route('/load_data_at_startup', methods=["POST"])
         def load_data_at_startup():
             try:
-                # self.controller.load_in_data_at_startup()
                 current_user.backend_controller.load_in_data_at_startup()
                 return jsonify("ACK")
             except:
@@ -109,7 +106,10 @@ class AppManager():
         @self._app.route("/logout", methods=["POST"])
         def logout():
             """Logs the user out and returns to the about page with login/register options"""
-            print("logging out")
+            self._send_to_client('logout', {})
+            # Closes out any threads on backend / cleans up for shutdown
+            current_user.backend_controller.shutdown()
+
             logout_user()
             return redirect(self.sites['landing_page'])
 
@@ -120,7 +120,6 @@ class AppManager():
         def add_task():
             if request.method == "POST":
                 new_task = request.get_json()['new_task']
-                # return_code = self.controller.add_task(new_task)
                 return_code = current_user.backend_controller.add_task(new_task)
 
                 # Remove lock on dropdown
@@ -129,7 +128,6 @@ class AppManager():
         @login_required
         @self._app.route('/get_task_list', methods=['POST', 'GET'])
         def get_task_list():
-            # task_list = self.controller.get_task_list()
             task_list = current_user.backend_controller.get_task_list()
             self._send_to_client('update_info', {'info': 'Loaded data from previous runs of the program'})
             return jsonify({'task_list': task_list})
@@ -140,7 +138,6 @@ class AppManager():
         @self._app.route('/start_timer', methods=['POST'])
         def start_timer():
             task_name = request.get_json()['task']
-            # self.controller.start_timer(task_name)
             current_user.backend_controller.start_timer(task_name)
             return jsonify('ACK')
 
@@ -148,7 +145,6 @@ class AppManager():
         @self._app.route('/stop_timer', methods=['POST'])
         def stop_timer():
             task_name = request.get_json()['task']
-            # self.controller.stop_timer(task_name)
             current_user.backend_controller.stop_timer(task_name)
             return jsonify('ACK')
 
@@ -156,10 +152,8 @@ class AppManager():
         @self._app.route('/get_current_diff', methods=['POST'])
         def get_current_diff():
             task_name = request.get_json()['task']
-            # time_diff = self.controller.get_current_diff(task_name)
             time_diff = current_user.backend_controller.get_current_diff(task_name)
 
-            # units = self.controller.time_units
             units = current_user.backend_controller.time_units
             return jsonify({'time_diff': time_diff, 'units': units})
     
@@ -168,10 +162,8 @@ class AppManager():
         @self._app.route("/get_total_time", methods=["POST"])
         def get_total_time():
             task_name = request.get_json()['task']
-            # total_time = self.controller.get_total_time(task_name)
             total_time = current_user.backend_controller.get_total_time(task_name)
 
-            # units = self.controller.time_units
             units = current_user.backend_controller.time_units
             return jsonify({'total_time': total_time, 'units': units})
 
@@ -179,10 +171,8 @@ class AppManager():
         @self._app.route("/get_completed_times", methods=["POST"])
         def get_completed_times():
             task_name = request.get_json()['task']
-            # units = self.controller.time_units
             units = current_user.backend_controller.time_units
 
-            # time_list = self.controller.get_completed_time_list(task_name)
             time_list = current_user.backend_controller.get_completed_time_list(task_name)
             return jsonify({'time_list': time_list, 'units': units})
     def _create_login_routes(self):

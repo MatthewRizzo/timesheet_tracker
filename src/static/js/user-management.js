@@ -2,7 +2,7 @@
 /**
  * File responsbile for js behavior when it comes to users
  */
-import { post_request } from './utils.js'
+import { post_request, get_root_url } from './utils.js'
 
 $(document).ready(async ()=>{
     const logout_button = document.getElementById('logout-button');
@@ -10,7 +10,17 @@ $(document).ready(async ()=>{
 
 })
 
+
+/**
+ * @brief Function to handle the logout of a user
+ */
 function handle_logout(){
-    const url = "/logout";
-    post_request(url, {})
+    // Inform backend that the user is being logged out
+    const logout_url = "/logout";
+    post_request(logout_url, {});
+
+    // Redirect to landing page
+    const url_root = get_root_url();
+    const landing_path_url = url_root + "/about";
+    window.location.href = landing_path_url;
 }

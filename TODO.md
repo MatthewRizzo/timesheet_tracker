@@ -39,3 +39,4 @@
 8. Add mode to registration questions
 9. Fix Werkzeug wrapper to allow for ctrl+c and ctrl+z to kill the server/app process
 10. Flash with flask users is broken...fix it
+11. When logger is being joined, have it flush its data to the file (make sure nothing is lost)

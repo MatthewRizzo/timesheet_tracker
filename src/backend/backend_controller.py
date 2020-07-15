@@ -22,6 +22,15 @@ class BackendController():
         self.time_units = constants.TIME_UNITS_BY_MODE[self._mode]
         self.logger = DataLogger(username=self._username, get_data_func=self.get_time_data, path_to_project_root=self._path_to_project_root)
 
+    def shutdown(self):
+        """Function responsible for safetly closing all threads / cleaning up anything needed at logout"""
+        # Stop the timer first so the logger can be sure it is flushing the most recent data
+        self.timer.logout()
+
+        if self.logger.isAlive():
+            self.logger.join()
+            self.logger = None
+
     ##################
     # Task Selection #
     ##################

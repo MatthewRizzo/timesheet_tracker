@@ -15,6 +15,7 @@ const update_total_time_interval = new DynamicInterval(display_times, 500);
 $(document).ready(() => {
     // Keep checking until a task option is added, then disable this and activate display total time
     wait_for_task_to_display.activate_interval();
+    create_socket_listener('logout', handle_logout);
 })
 
 /**
@@ -99,6 +100,14 @@ async function display_time_list(){
         }
     }
     display_json.time_box.value = display_msg;
+}
+
+/**
+ * @brief Cleans up anything created in this file that needs to be stopped/deleted on logout
+ */
+function handle_logout(){
+    update_total_time_interval.deactivate_interval();
+    wait_for_task_to_display.deactivate_interval();
 }
 
 /**

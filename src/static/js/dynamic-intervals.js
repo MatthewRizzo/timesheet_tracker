@@ -18,13 +18,15 @@ export class DynamicInterval {
      * @brief function to recereate the interval when asked
      */
     activate_interval(){
-        // this._interval = setInterval(() => this._callback, this._interval_period);
         this._interval = setInterval(this._callback, this._interval_period);
     }
 
     deactivate_interval(){
-        clearInterval(this._interval);
-        this._interval = null;
+        // In case deactivate is called redundantly on cleanup
+        if(this._interval != null){
+            clearInterval(this._interval);
+            this._interval = null;
+        }
     }
     
 }
