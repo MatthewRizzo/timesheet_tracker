@@ -11,12 +11,8 @@ if [[ "${is_windows}" = false ]]; then
 fi
 
 # Go to the root of the install dir, regardless of where this script was run from
-install_dir_path=$(cd `dirname $0` && pwd)
-cd $install_dir_path
-
-# Go up one to get to project root
-cd ../
-project_root_dir=$PWD
+install_dir_path="$(readlink -fm $0/..)"
+project_root_dir="$(readlink -fm ${THIS_FILE_DIR}/..)"
 
 # Go back to install folder
 cd $install_dir_path

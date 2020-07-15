@@ -1,13 +1,11 @@
 #!/bin/bash
 
 # Store the start loc to go back to it when done
-start_loc=$PWD
+install_dir_path="$(readlink -fm $0/..)"
+project_root_dir="$(readlink -fm ${install_dir_path}/..)"
 
 # Go to project root - navigate to the install folder and backup one to get to project root
-install_dir_path=$(cd `dirname $0` && pwd)
-cd $install_dir_path
-cd ../
-project_root_dir=$PWD
+cd $project_root_dir
 
 # Check Python Version
 python_version=3.7
