@@ -19,7 +19,3 @@ class WebAppUser(UserMixin):
 
         # Required by extension of UserMixin 
         self.id = user_unique_id 
-
-    def check_password(self, password) -> bool:
-        """:return True if the password is correct for this user """
-        return self.password == password

@@ -38,6 +38,10 @@ class BackendController():
         """:brief returns a list of the tasks currently stored by time_manager"""
         return self.timer.task_list
 
+    def get_username(self) -> str:
+        """:returns the username of this BackendController object"""
+        return self._username
+
     #########################
     # End of Task Selection #
     #########################

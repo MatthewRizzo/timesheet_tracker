@@ -13,7 +13,7 @@ import webbrowser
 import werkzeug.serving 
 
 # -- Project Defined Imports -- #
-from backend.backend_controller import BackendController
+from backend.backend_controller import BackendController    # Not instantiated here, but used for linting / finding valid functions
 from backend import constants
 from backend.app_user_management.user_manager import UserManager
 from backend.app_user_management import user_form_defines
@@ -69,7 +69,8 @@ class AppManager():
         @login_required
         @self._app.route(self.sites["homepage"])
         def homepage():
-            return render_template("index.html")
+            username = current_user.backend_controller.get_username()
+            return render_template("index.html", username=username)
 
         @self._app.route("/favicon.ico")
         def favicon():
@@ -105,26 +106,12 @@ class AppManager():
             # Only gets here if the form is not validated. Restarts the registration process
             return render_template('register_page.html', title='Register', form=register_form, links=self.sites, form_links=self.form_sites)
 
-    def _create_login_routes(self):
-        """:brief Wrapper function to create all functions / flask wrappers + routes for logging a user in"""
-        @self._app.route(self.form_sites["login"], methods=["POST", "GET"])
-        def login():
-            if current_user.is_authenticated:
-                return redirect(self.sites["homepage"])
-            login_form = user_form_defines.LoginForm()
-            
-            if login_form.validate_on_submit():
-                user = self.user_manager.get_user_by_username(login_form.username.data)
-                
-                if user is None or user.check_password(login_form.password.data) is False:
-                    flash('Username or Password is incorrect')
-                    return redirect(constants.SITE_PATHS['login'])
-                
-                # Why this is being done - https://flask-login.readthedocs.io/en/latest/#flask_login.LoginManager.user_loader
-                login_user(user, remember=True)
-                return redirect(constants.SITE_PATHS['homepage'])
-            # If the user needs to login
-            return render_template('login_page.html', title='Sign In', form=login_form, form_links=self.form_sites)
+        @self._app.route("/logout", methods=["POST"])
+        def logout():
+            """Logs the user out and returns to the about page with login/register options"""
+            print("logging out")
+            logout_user()
+            return redirect(self.sites['landing_page'])
 
     def _create_task_selection_routes(self):
         """Function responsible for all routes in the Task Selection Panel"""
@@ -198,6 +185,36 @@ class AppManager():
             # time_list = self.controller.get_completed_time_list(task_name)
             time_list = current_user.backend_controller.get_completed_time_list(task_name)
             return jsonify({'time_list': time_list, 'units': units})
+    def _create_login_routes(self):
+        """:brief Wrapper function to create all functions / flask wrappers + routes for logging a user in"""
+        @self._app.route(self.form_sites["login"], methods=["POST", "GET"])
+        def login():
+            if current_user.is_authenticated:
+                return redirect(self.sites["homepage"])
+            login_form = user_form_defines.LoginForm()
+            
+            if login_form.validate_on_submit():
+                username = login_form.username.data
+                password = login_form.password.data
+                does_user_exist = self.user_manager.does_username_exist(username)
+                if does_user_exist is False:
+                    print("Username is incorrect")
+                    flash('Username is incorrect')
+                    return redirect(constants.FORM_SITES['login'])
+
+                # Login the user so that their data is present
+                logged_in_user = self.user_manager.login_user(username)
+                
+                if self.user_manager.is_password_valid(username, password) is False:
+                    print("Username or Password is incorrect")
+                    flash('Username or Password is incorrect')
+                    return redirect(constants.FORM_SITES['login'])
+                
+                # Why this is being done - https://flask-login.readthedocs.io/en/latest/#flask_login.LoginManager.user_loader
+                login_user(logged_in_user, remember=True)
+                return redirect(constants.SITE_PATHS['homepage'])
+            # If the user needs to login
+            return render_template('login_page.html', title='Sign In', form=login_form, form_links=self.form_sites)
 
     def _create_url(self):
         # TODO - make port dyanmic and ensure it is unused
@@ -233,7 +250,7 @@ class AppManager():
         # webbrowser.open(f"http://{self._host_name}:{self._port}/")
 
         # Url to go landing_page - http://localhost:5000/about
-        landing_page_url = "http://{hostname}:{port}/{landing_page}".format(hostname=self._host_name, 
+        landing_page_url = "http://{hostname}:{port}{landing_page}".format(hostname=self._host_name, 
                                             port=self._port, landing_page=self.sites["landing_page"])
         webbrowser.open(landing_page_url)
 
