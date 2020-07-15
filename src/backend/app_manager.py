@@ -209,7 +209,7 @@ class AppManager():
     def _create_url(self):
         # TODO - make port dyanmic and ensure it is unused
         self._host_name = 'localhost'
-        self._port = 5000
+        self._port = 65502
 
     def _setup_app_config(self):
         self._cur_file_path = os.path.abspath(os.path.dirname(__file__))
