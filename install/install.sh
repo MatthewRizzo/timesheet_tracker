@@ -10,7 +10,7 @@ cd $project_root_dir
 # Check Python Version
 python_version=3.7
 echo Checking Python version is ${python_version}
-current_version_text=$(python3 --version)
+current_version_text=$(python3.7 --version)
 current_minor_version=$(echo "$current_version_text" | awk '{print $2}')
 current_version=$(echo "${currVersionMinor}" | sed -r 's/\.[0-9]$//') # Takes away minor version (3.7.2 -> 3.7)
  if [[ ${python_version} != ${current_version} ]]; then
