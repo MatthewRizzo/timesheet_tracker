@@ -7,19 +7,17 @@
         * Round to 1 decimal and always round up
         * Make it so that it rounds up to nearest 1/10 of an hour (6 min)
         * Exception is if exactly a 1/10 has been worked
-2. Add ability to distinguish between users 
-    * I.e. their times would be different
-3. Add 'notes' section to time segements. 
+2. Add 'notes' section to time segements. 
     * User could input a note before or during a time session
     * That note would be stored with start time, stop time, diff time
     * That note would be displayed in general information 
     * That note would be dispalyed in the line item summary of time display
-4. Make a calendar view mode
-5. Have a clean/dirty flag to prevent unnecessary writes to json if nothing has changed for a given user's data
-6. Save Users + credentials to a database (that is gitignored)
+3. Make a calendar view mode
+4. Have a clean/dirty flag to prevent unnecessary writes to json if nothing has changed for a given user's data
+5. Save Users + credentials to a database (that is gitignored)
     * Pull from this file on startup (prevent having to reregister)
     * Makes looking through users not O(n) because lookup times are faster 
-7. Split up tasks by day they occur / in time display, user selects the day to view **HIGH PRIORITY**
+6. Split up tasks by day they occur / in time display, user selects the day to view **HIGH PRIORITY**
     * Maybe add another layer to the json? the day it happened
     * Problem emerges where total time will mix all days
     * For the program to make sense, it should be a daily logger.
