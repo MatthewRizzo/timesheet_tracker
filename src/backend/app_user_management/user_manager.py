@@ -36,7 +36,7 @@ class UserManager():
         """:return True if the username is already in use by another user.
         \n:note Used as valdiate function by FlaskForm's"""
         # If this returns a user, the username is a duplicate. If it returns none, it has yet to be used
-        user = cls.get_user_by_username()
+        user = cls.get_user_by_username(username)
         # only returns None when the username does not exist
         if user is None:
             return False
@@ -66,10 +66,10 @@ class UserManager():
         return cookie_dict
 
     @classmethod
-    def get_user_by_username(cls, taget_username) -> WebAppUser:
+    def get_user_by_username(cls, target_username) -> WebAppUser:
         """:return None if username does not exist. Otherwise a WebAppUser object"""
         def is_user_target(user: WebAppUser) -> WebAppUser:
-            return user.username == taget_username
+            return user.username == target_username
         # In the case of duplicate usernames, potential users with be a list of more than 1 WebAppUser objects
         potential_users = list(filter(is_user_target, UserManager._users.values()))
         user = potential_users[0] if len(potential_users) > 0 else None

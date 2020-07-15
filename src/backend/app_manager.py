@@ -90,24 +90,18 @@ class AppManager():
         @self._app.route(self.form_sites["registration"], methods=["POST", "GET"])
         def register():
             """ Creates the registration page when this route is triggered"""
-            print("in register page")
             # If login not needed, go to homepage
             if current_user.is_authenticated:
                 return redirect(self.sites["homepage"])
-            print("after authenticated, before register form")
             register_form = user_form_defines.RegistrationForm()
-            print(f"Register form = {register_form}")
             
             # Ensure the form is valid, then process it
             if register_form.validate_on_submit():
-                print("in on submit")
                 username = register_form.username.data
-                print("After check username")
                 password = register_form.password.data
                 self.user_manager.user_manager.add_user(username, password)
                 flash(f"Congratulations, user {username} is registered successfully. Please login to continue.")
                 return redirect(self.form_sites["login"])
-            print("rendering the template")
             # Only gets here if the form is not validated. Restarts the registration process
             return render_template('register_page.html', title='Register', form=register_form, links=self.sites, form_links=self.form_sites)
 
@@ -120,7 +114,8 @@ class AppManager():
             login_form = user_form_defines.LoginForm()
             
             if login_form.validate_on_submit():
-                user = self.user_manager.user_manager.get_user_by_username(login_form.username.data)
+                user = self.user_manager.get_user_by_username(login_form.username.data)
+                
                 if user is None or user.check_password(login_form.password.data) is False:
                     flash('Username or Password is incorrect')
                     return redirect(constants.SITE_PATHS['login'])
