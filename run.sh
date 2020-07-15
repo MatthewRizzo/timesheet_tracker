@@ -9,7 +9,7 @@ if test -d "$path_to_venv_python_dir"; then
     $full_python_path $start_app_cmd
 else 
     echo 'The Linux Virtual Environment is not setup.'
-    echo 'Please run installation/install.sh and then rerun this script'
+    echo 'Please run install/install.sh and then rerun this script'
 fi
 
 

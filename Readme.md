@@ -5,7 +5,7 @@ This code will keep track of timespent on a task(s) through a UI with a start/st
 ## How to Setup / Run the Timesheet Tracker
 * All you need is python3.7 or greater!! 
 * After cloning the Repository **(This only needs to be done once)**:
-    1. Navigate to the installation folder
+    1. Navigate to the install folder
     2. run install.bat (windows) or ./install.sh (linux)
         * These will create a virtual environment within the project for you
         * This is the only setup you need to do

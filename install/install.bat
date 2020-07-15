@@ -2,7 +2,7 @@
 :: Save the start location for when the script ends
 set start_loc=%CD% 
 
-:: Go to installation folder - folder containing this script. 
+:: Go to install folder - folder containing this script. 
 set script_loc=%~dp0
 
 :: Ensures path's will always be relative to install folder and project root
