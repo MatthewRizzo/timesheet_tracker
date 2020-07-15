@@ -42,6 +42,12 @@ DATA_JSON_NAME = "times.json"
 
 # Flask Site Pathing for sites that need to be references in multiple places
 SITE_PATHS = {
-    "homepage":    "/",
-    "login":       "/login",
+    "landing_page":         "/about",
+    "homepage":             "/",
+    "form_sites": {
+        "login":            "/login",
+        "registration":     "/register",
+    }
 }
+
+FORM_SITES = SITE_PATHS['form_sites']

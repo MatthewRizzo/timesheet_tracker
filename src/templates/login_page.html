@@ -3,17 +3,13 @@
     
     <!-- CSS Includes -->
     <link rel="stylesheet" type="text/css" href="../static/css/general.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/task_selection.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/timer_management.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/time-display.css">
-    
     <title>{{ title }}</title>
 </head>
 
 <body>
     <div class="flex-container">
         <div id="login-container">
-            <p>New User? <a href="{{ formLinks.webAppRegister }}">Click to Register!</a></p>
+            <p>New User? <a href="{{ form_links.registration }}">Click to Register!</a></p>
                 <h1>Sign In</h1>
                 <form action="" method="post" novalidate>
                     {{ form.hidden_tag() }}

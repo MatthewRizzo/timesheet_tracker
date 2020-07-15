@@ -11,6 +11,7 @@ from wtforms import StringField, PasswordField, SubmitField
 # -- Project Defined Imports -- #
 from backend import constants
 from backend.app_user_management.user_form_manager import UserFormManager
+from backend.app_user_management.user_form_defines import RegistrationForm, LoginForm
 from backend.app_user_management.web_app_user import WebAppUser
 from backend import utils
 
@@ -58,8 +59,11 @@ class UserManager():
         self._users[user_token] = new_user
 
 
-    def get_login_form(self):
+    def get_login_form(self) -> LoginForm:
         return self._user_form_manager.get_login_form()
+
+    def get_registration_form(self) -> RegistrationForm:
+        return self._user_form_manager.get_registration_form()
 
     def get_user_login(self, user_id) -> dict():
         """:brief: Get the user's login username and password based on their browser's cookie
@@ -93,8 +97,13 @@ class UserManager():
         path_to_user_dir = constants.PATH_TO_USER_DATA
         path_to_cookie_file = constants.PATH_TO_COOKIES_DATA
         constants.PATH_TO_COOKIES_DATA
-        if path_to_cookie_file.exists() is False:
+        # Create path to parent dir of file
+        if path_to_user_dir.exists is False:
             path_to_user_dir.mkdir(parents=True)
+
+        # If the file itself does not exist, create it
+        if path_to_cookie_file.exists() is False:
+            utils.write_to_json(path_to_cookie_file, {})
 
     def _create_login_manager(self):
         """\n:brief: Helper function that links all the necessary login (callbacks) from flask login

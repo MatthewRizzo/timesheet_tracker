@@ -11,7 +11,7 @@ class WebAppUser(UserMixin):
     \n:param user_unique_id - A unique id given to each user
 
     """
-    def __init__(self, username: str, password: str, user_unique_id, send_to_client_func: function):
+    def __init__(self, username: str, password: str, user_unique_id, send_to_client_func):
         # A user is mostly the backend controller wrapped around identifiers for the account
         self.username = username
         self.password = password

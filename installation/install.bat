@@ -31,11 +31,11 @@ set python_program=python.exe
 cd %venv_scripts_path%
 
 :: Just in case, update pip
-echo Updating Pip
+@echo Updating Pip
 %python_program% -m pip install --upgrade pip
 
 :: Install the modules (with their correct versions) to the venv
-echo Installing python modules
+@echo Installing python modules
 %python_program% -m pip install -r %script_loc%\requirements.txt
 
 :: Go back to starting location after install complete

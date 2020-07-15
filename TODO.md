@@ -1,5 +1,6 @@
-## Higher level priority functionalities to implement
+## MIGRATE THIS LIST TO A ZENHUB KANBAN BOARD!!!!!!!!!
 
+## Higher level priority functionalities to implement
 1. Add Mode's that are selected in task menu
     1. For now just law mode
     2. Have the mode correspond to how diff math is done 
@@ -18,7 +19,11 @@
 6. Save Users + credentials to a database (that is gitignored)
     * Pull from this file on startup (prevent having to reregister)
     * Makes looking through users not O(n) because lookup times are faster 
-
+7. Split up tasks by day they occur / in time display, user selects the day to view **HIGH PRIORITY**
+    * Maybe add another layer to the json? the day it happened
+    * Problem emerges where total time will mix all days
+    * For the program to make sense, it should be a daily logger.
+    * The total time and time display should reflect the current day
 
 ## Low Priority tasks once base functionality exists
 1. Make login so that multiple people can use program without seeing each other's data
@@ -31,3 +36,4 @@
     * temporarily turn it back on if the dropdown menu every changes
 7. make automatically openning the webpage happen via flag
     * Once deployed, every service start a new tab will be opened
+8. Add mode to registration questions

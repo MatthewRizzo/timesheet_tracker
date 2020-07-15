@@ -20,6 +20,7 @@ class AppManager():
     """Class responsible for setting up the Flask app and managing all the routes / sockets"""
     def __init__(self):
         self.sites = constants.SITE_PATHS
+        self.form_sites = self.sites["form_sites"]
 
         self._setup_app_config()
 
@@ -42,6 +43,7 @@ class AppManager():
     def create_routes(self):
         """Wrapper function for all the routes that need to be created
         """
+        self._create_registration_routes()
         self._create_login_routes()
         self._create_mainpage_routes()
         self._create_task_selection_routes()
@@ -56,6 +58,13 @@ class AppManager():
             self._socketio.emit(message_name)
 
     def _create_mainpage_routes(self):
+        @self._app.route(self.sites["landing_page"])
+        def landing_page():
+            """This is the page users will have access to before logging in. It allows them to register and or login"""
+            print("opening landing page")
+            return render_template("landing_page.html", title="Timesheet Tracker About Page")#, links=self.sites, form_links=self.form_sites)
+            
+
         @login_required
         @self._app.route(self.sites["homepage"])
         def homepage():
@@ -65,6 +74,7 @@ class AppManager():
         def favicon():
             return send_from_directory(self._images_dir, 'stopwatch.png', mimetype='image/vnd.microsoft.icon')
 
+        @login_required
         @self._app.route('/load_data_at_startup', methods=["POST"])
         def load_data_at_startup():
             try:
@@ -74,16 +84,38 @@ class AppManager():
             except:
                 return jsonify("NACK")
 
+    def _create_registration_routes(self):
+        """:brief Wrapper function to create all functions / flask wrappers + routes for registering a new user"""
+        @self._app.route(self.form_sites["registration"], methods=["POST", "GET"])
+        def register():
+            """ Creates the registration page when this route is triggered"""
+            print("in register page")
+            # If login not needed, go to homepage
+            if current_user.is_authenticated:
+                return redirect(self.sites["homepage"])
+            register_form = self._user_manager.get_registration_form()
+            
+            # Ensure the form is valid, then process it
+            if register_form.validate_on_submit():
+                username = register.username.data
+                password = register_form.password.data
+                self._user_manager.add_user(username, password)
+                flash(f"Congratulations, user {username} is registered successfully. Please login to continue.")
+                return redirect(self.form_sites["login"])
+            
+            # Only gets here if the form is not validated. Restarts the registration process
+            return render_template('register_page.html', title='Register', form=register_form, links=self.sites, form_links=self.form_sites)
+
     def _create_login_routes(self):
         """:brief Wrapper function to create all functions / flask wrappers + routes for logging a user in"""
-        @self._app.route(self.sites["/login"], methods=["POST", "GET"])
+        @self._app.route(self.form_sites["login"], methods=["POST", "GET"])
         def login():
             if current_user.is_authenticated:
                 return redirect(self.sites["homepage"])
-            form = self._user_manager.get_login_form()
-            if form.validate_on_submit():
-                user = self._user_manager.get_user_by_username(form.username.data)
-                if user is None or user.check_password(form.password.data) is False:
+            login_form = self._user_manager.get_login_form()
+            if login_form.validate_on_submit():
+                user = self._user_manager.get_user_by_username(login_form.username.data)
+                if user is None or user.check_password(login_form.password.data) is False:
                     flash('Username or Password is incorrect')
                     return redirect(constants.SITE_PATHS['login'])
                 
@@ -91,8 +123,7 @@ class AppManager():
                 login_user(user, remember=True)
                 return redirect(constants.SITE_PATHS['homepage'])
             # If the user needs to login
-            return render_template('login_page.html', title='Sign In', form=form, 
-                                formLinks=self.formSites)
+            return render_template('login_page.html', title='Sign In', form=login_form, form_links=self.form_sites)
 
     def _create_task_selection_routes(self):
         """Function responsible for all routes in the Task Selection Panel"""
@@ -167,10 +198,6 @@ class AppManager():
             time_list = current_user.backend_controller.get_completed_time_list(task_name)
             return jsonify({'time_list': time_list, 'units': units})
 
-
-
-
-
     def _create_url(self):
         # TODO - make port dyanmic and ensure it is unused
         self._host_name = 'localhost'
@@ -199,8 +226,13 @@ class AppManager():
             self._log.setLevel(logging.INFO)
 
         # TODO make open only happen when asked via flag
-        webbrowser.open(f"http://{self._host_name}:{self._port}/")
+        # webbrowser.open(f"http://{self._host_name}:{self._port}/")
 
-        # self._app.run(host=self._host_name, port=self._port, debug=self._debug)
-        werkzeug.serving.run_simple(hostname=self._host_name, port=int(self._port), 
-                                application=self._app, use_debugger=self._debug)
+        # Url to go landing_page - http://localhost:5000/about
+        landing_page_url = "http://{hostname}:{port}/{landing_page}".format(hostname=self._host_name, 
+                                            port=self._port, landing_page=self.sites["landing_page"])
+        webbrowser.open(landing_page_url)
+
+        self._app.run(host=self._host_name, port=self._port, debug=self._debug)
+        # werkzeug.serving.run_simple(hostname=self._host_name, port=int(self._port), 
+        #                         application=self._app, use_debugger=self._debug)

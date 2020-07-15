@@ -1,0 +1,21 @@
+<head>
+    <link rel = "icon" type="image/png" src="../static/images/images/stopwatch.png" type="image/x-icon">
+        <!-- CSS Includes -->
+        <link rel="stylesheet" type="text/css" href="../static/css/general.css">
+</head>
+
+<body>
+    <div id="flashed-messages">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <!-- <h1>Alerts:</h1> -->
+            <ul class=flashes>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        {% endwith %}
+        {% block body %}{% endblock %}
+    </div>
+</body>

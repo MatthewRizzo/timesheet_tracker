@@ -16,7 +16,7 @@ def write_to_json(path_to_json: pathlib.Path, json_data: dict, indent=4):
     with open(path_to_json, 'w+') as write_file:
         json.dump(json_data, write_file, indent=indent)
 
-def get_project_root_path(self) -> pathlib.Path:
+def get_project_root_path() -> pathlib.Path:
     """:return - Path absolute path to project root"""
     # Includes the file name
     path_to_current_file = pathlib.Path(__file__) 
