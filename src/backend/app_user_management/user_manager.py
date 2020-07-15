@@ -10,36 +10,33 @@ from wtforms import StringField, PasswordField, SubmitField
 
 # -- Project Defined Imports -- #
 from backend import constants
-from backend.app_user_management.user_form_manager import UserFormManager
-from backend.app_user_management.user_form_defines import RegistrationForm, LoginForm
 from backend.app_user_management.web_app_user import WebAppUser
 from backend import utils
 
 class UserManager():
+    """Class that manages all existing users of the application given a valid Flask app object.
+    \n:note Has some class methods in order to provide a validation function to FlaskForm's"""
+    # TODO: This will cause interactions with users to have an unfortunately large complexity
+    # Maps unique id's -> user objects
+    _users = {}
+
     def __init__(self, app: Flask, send_to_client_func):
-        """Class that manages all existing users of the application given a valid Flask app object"""
+
         # Save inputs  to class
-        self._flask_app = app
         self._send_to_client_func = send_to_client_func
-
-        # TODO: This will cause interactions with users to have an unfortunately large complexity
-        # Maps unique id's -> user objects
-        self._users = {}
-
-        # Create and save objects using inputs
         self._login_manager = LoginManager(app)
-        self._user_form_manager = UserFormManager(self.does_username_exist)
 
         self._create_cookie_data_file()
         self._create_login_manager()
-    
     #####################
     # Public Functions  #
     #####################
-    def does_username_exist(self, username: str) -> bool():
-        """:return True if the username is already in use by another user"""
+    @classmethod
+    def does_username_exist(cls, username: str) -> bool():
+        """:return True if the username is already in use by another user.
+        \n:note Used as valdiate function by FlaskForm's"""
         # If this returns a user, the username is a duplicate. If it returns none, it has yet to be used
-        user = self.get_user_by_username()
+        user = cls.get_user_by_username()
         # only returns None when the username does not exist
         if user is None:
             return False
@@ -56,14 +53,7 @@ class UserManager():
         # Create a new user based on the information gathered
         new_user = WebAppUser(username=username, password=password, user_unique_id=user_token,
                             send_to_client_func=self._send_to_client_func)
-        self._users[user_token] = new_user
-
-
-    def get_login_form(self) -> LoginForm:
-        return self._user_form_manager.get_login_form()
-
-    def get_registration_form(self) -> RegistrationForm:
-        return self._user_form_manager.get_registration_form()
+        UserManager._users[user_token] = new_user
 
     def get_user_login(self, user_id) -> dict():
         """:brief: Get the user's login username and password based on their browser's cookie
@@ -75,19 +65,20 @@ class UserManager():
         cookie_dict = utils.load_json(constants.PATH_TO_COOKIES_DATA)
         return cookie_dict
 
-    def get_user_by_username(self, taget_username) -> WebAppUser:
+    @classmethod
+    def get_user_by_username(cls, taget_username) -> WebAppUser:
         """:return None if username does not exist. Otherwise a WebAppUser object"""
         def is_user_target(user: WebAppUser) -> WebAppUser:
             return user.username == taget_username
         # In the case of duplicate usernames, potential users with be a list of more than 1 WebAppUser objects
-        potential_users = list(filter(is_user_target, self._users.values()))
+        potential_users = list(filter(is_user_target, UserManager._users.values()))
         user = potential_users[0] if len(potential_users) > 0 else None
         return user
 
     def remove_user(self, user_id):
         """:param `user_id` - A user's unique id / token"""
         #TODO: make a logout client function and call it
-        del self._users[user_id]
+        del UserManager._users[user_id]
 
     ######################
     # Private Functions  #
@@ -116,7 +107,7 @@ class UserManager():
                 \nparam - `user_token` - The user's unique token id
                 \nreturn - The WebAppUser object corresponding to the `user_token` given
             """
-            return self._users[user_token]
+            return UserManager._users[user_token]
 
         @self._login_manager.unauthorized_handler
         def on_need_to_login():
@@ -132,7 +123,7 @@ class UserManager():
         while True:
             user_token = self._generate_safe_cookie_token()
             # Once and unused token is found, return it
-            if user_token not in self._users:
+            if user_token not in UserManager._users:
                 return user_token
 
     def _generate_safe_cookie_token(self) -> uuid.uuid4:

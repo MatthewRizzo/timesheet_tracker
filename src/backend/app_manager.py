@@ -5,6 +5,7 @@ from flask import request, Flask, render_template, send_from_directory, jsonify,
 from flask_socketio import SocketIO
 from flask_login import login_user, current_user, login_required, logout_user
 import logging
+import secrets # Used to create a secure secret key (used by flask's application)
 import os
 import webbrowser
 
@@ -15,6 +16,7 @@ import werkzeug.serving
 from backend.backend_controller import BackendController
 from backend import constants
 from backend.app_user_management.user_manager import UserManager
+from backend.app_user_management import user_form_defines
 
 class AppManager():
     """Class responsible for setting up the Flask app and managing all the routes / sockets"""
@@ -33,7 +35,7 @@ class AppManager():
         # Used to communicate from backend->frontend js
         self._socketio = SocketIO(self._app, async_mode="threading")
         self._create_url()
-        self._user_manager = UserManager(app=self._app, send_to_client_func=self._send_to_client)
+        self.user_manager = UserManager(app=self._app, send_to_client_func=self._send_to_client)
 
         # self.controller = BackendController(self._send_to_client, self._user)
 
@@ -61,8 +63,7 @@ class AppManager():
         @self._app.route(self.sites["landing_page"])
         def landing_page():
             """This is the page users will have access to before logging in. It allows them to register and or login"""
-            print("opening landing page")
-            return render_template("landing_page.html", title="Timesheet Tracker About Page")#, links=self.sites, form_links=self.form_sites)
+            return render_template("landing_page.html", title="Timesheet Tracker About Page", links=self.sites, form_links=self.form_sites)
             
 
         @login_required
@@ -93,16 +94,20 @@ class AppManager():
             # If login not needed, go to homepage
             if current_user.is_authenticated:
                 return redirect(self.sites["homepage"])
-            register_form = self._user_manager.get_registration_form()
+            print("after authenticated, before register form")
+            register_form = user_form_defines.RegistrationForm()
+            print(f"Register form = {register_form}")
             
             # Ensure the form is valid, then process it
             if register_form.validate_on_submit():
-                username = register.username.data
+                print("in on submit")
+                username = register_form.username.data
+                print("After check username")
                 password = register_form.password.data
-                self._user_manager.add_user(username, password)
+                self.user_manager.user_manager.add_user(username, password)
                 flash(f"Congratulations, user {username} is registered successfully. Please login to continue.")
                 return redirect(self.form_sites["login"])
-            
+            print("rendering the template")
             # Only gets here if the form is not validated. Restarts the registration process
             return render_template('register_page.html', title='Register', form=register_form, links=self.sites, form_links=self.form_sites)
 
@@ -112,9 +117,10 @@ class AppManager():
         def login():
             if current_user.is_authenticated:
                 return redirect(self.sites["homepage"])
-            login_form = self._user_manager.get_login_form()
+            login_form = user_form_defines.LoginForm()
+            
             if login_form.validate_on_submit():
-                user = self._user_manager.get_user_by_username(login_form.username.data)
+                user = self.user_manager.user_manager.get_user_by_username(login_form.username.data)
                 if user is None or user.check_password(login_form.password.data) is False:
                     flash('Username or Password is incorrect')
                     return redirect(constants.SITE_PATHS['login'])
@@ -215,6 +221,9 @@ class AppManager():
                     template_folder=self._template_dir,
                     root_path=self._src_root)
         self._app.config['TEMPLATES_AUTO_RELOAD'] = True
+
+        # Use this to make sure data is kept secure
+        self._app.config["SECRET_KEY"] = secrets.token_urlsafe(64)
 
     def start_app(self):
         """Startup Flask"""
