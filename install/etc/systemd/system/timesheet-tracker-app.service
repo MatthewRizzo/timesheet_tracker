@@ -1,0 +1,12 @@
+[Unit]
+Description=Run the Timesheet Tracking Web Application
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+environment_file=/etc/sysconfig/web_app_environ
+ExecStart=/bin/bash ${project_root_dir}/run.sh
+RestartSec=1min
+
+[Install]
+WantedBy=multi-user.target

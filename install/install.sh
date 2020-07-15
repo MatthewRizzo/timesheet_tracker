@@ -1,11 +1,25 @@
+#!/bin/bash
+
 # Store the start loc to go back to it when done
 start_loc=$PWD
 
 # Go to project root - navigate to the install folder and backup one to get to project root
-script_dir_path=$(cd `dirname $0` && pwd)
-cd $script_dir_path
+install_dir_path=$(cd `dirname $0` && pwd)
+cd $install_dir_path
 cd ../
 project_root_dir=$PWD
+
+# Check Python Version
+python_version=3.7
+echo Checking Python version is ${python_version}
+current_version_text=$(python3 --version)
+current_minor_version=$(echo "$current_version_text" | awk '{print $2}')
+current_version=$(echo "${currVersionMinor}" | sed -r 's/\.[0-9]$//') # Takes away minor version (3.7.2 -> 3.7)
+ if [[ ${python_version} != ${current_version} ]]; then
+        echo "WARNING: Wrong version of python being used. Expects python${python_version}. This might affect results"
+        exit
+fi
+
 
 # Delete any currently existing venv's
 echo Deleting any existing virtual environment
@@ -13,7 +27,7 @@ rm -rf $project_root_dir/virtual_environment_linux
 
 # Create the venv
 echo Creating the virtual environment
-python3.7 -m venv virtual_environment_linux
+python$python_version -m venv virtual_environment_linux
 
 # Setup Path's relative to project root
 venv_dir_name='virtual_environment_linux'

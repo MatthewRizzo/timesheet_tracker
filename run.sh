@@ -1,3 +1,5 @@
+#!/bin/bash
+
 path_to_venv_python_dir=$PWD/virtual_environment_linux/bin
 python_executable=python3
 start_app_cmd=$PWD/src/__main__.py

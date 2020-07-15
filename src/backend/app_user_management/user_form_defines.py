@@ -15,7 +15,7 @@ def validate_username(form, field) -> bool:
     # Determine if the username has been taken
     is_username_in_use = UserManager.does_username_exist(field.data)
     if is_username_in_use is False:
-        ValidationError("No account with that username exists. Please try again.")
+        raise ValidationError("No account with that username exists. Please try again.")
     return is_username_in_use
 
 class LoginForm(FlaskForm):
