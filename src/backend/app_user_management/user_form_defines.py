@@ -9,7 +9,7 @@ from flask import flash
 # -- Project Defined Imports -- #
 from backend.app_user_management.user_manager import UserManager
 
-def validate_username(form, field) -> bool:
+def validate_username_login(form, field) -> bool:
     """:brief Validates that the username used to login is valid (that it exists with an already created user)
     \n:return True if the username exists for any user"""
     # Determine if the username has been taken
@@ -18,16 +18,25 @@ def validate_username(form, field) -> bool:
         raise ValidationError("No account with that username exists. Please try again.")
     return is_username_in_use
 
+def validate_username_register(form, field) -> bool:
+    """:brief Validates that the username used to login is valid (that it exists with an already created user)
+    \n:return True if the username exists for any user"""
+    # Determine if the username has been taken
+    is_username_in_use = UserManager.does_username_exist(field.data)
+    if is_username_in_use is True:
+        raise ValidationError("That username is already in use. Please try again.")
+    return is_username_in_use
+
 class LoginForm(FlaskForm):
     """Represents the creation of a basic login form that is authenticatable by the application"""
-    username = StringField('Username', validators=[DataRequired(), validate_username])
+    username = StringField('Username', validators=[DataRequired(), validate_username_login])
     password = PasswordField('Password',  validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Submit')
 
 class RegistrationForm(FlaskForm):
     """Represents the creation of a basic registration form that is authenticatable by the application"""
-    username = StringField('Username', validators=[DataRequired(), validate_username])
+    username = StringField('Username', validators=[DataRequired(), validate_username_register])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
