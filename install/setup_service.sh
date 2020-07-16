@@ -14,9 +14,6 @@ fi
 install_dir_path="$(readlink -fm $0/..)"
 project_root_dir="$(readlink -fm ${install_dir_path}/..)"
 
-echo "install_dir_path = ${install_dir_path}"
-echo "project_root_dir = ${project_root_dir}"
-
 # Go back to install folder
 cd $install_dir_path
 

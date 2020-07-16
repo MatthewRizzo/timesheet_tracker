@@ -7,13 +7,13 @@ def load_json(path_to_json: pathlib.Path) -> dict:
     \n:param `path_to_json` - The path to the json to be opened
     \n:return The contents of the json
     """
-    with open(path_to_json, 'r+') as data_file:
+    with open(path_to_json, 'r') as data_file:
         data = json.load(data_file)
     return data
 
 def write_to_json(path_to_json: pathlib.Path, json_data: dict, indent=4):
     """:brief given a path, opens a json file, and writes the contents of json_data to it"""
-    with open(path_to_json, 'w+') as write_file:
+    with open(path_to_json, 'w') as write_file:
         json.dump(json_data, write_file, indent=indent)
 
 def get_project_root_path() -> pathlib.Path:
