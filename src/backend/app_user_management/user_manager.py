@@ -146,7 +146,7 @@ class UserManager():
             return
 
         # Create path to parent dir of file
-        if path_to_user_dir.exists is False:
+        if path_to_user_dir.exists() is False:
             path_to_user_dir.mkdir(parents=True)
         if path_to_cookie_file.exists() is False:
             # If the file itself does not exist, create it
