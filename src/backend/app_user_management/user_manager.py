@@ -208,5 +208,5 @@ class UserManager():
             """\n:brief: VERY important. This callback  redirects the user to login if needed.
                 "@login_required" triggers this function if page is accessed without logging in
             """
-            return redirect(constants.SITE_PATHS["login"])
+            return redirect(constants.FORM_SITES["login"])
 
