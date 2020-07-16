@@ -17,6 +17,7 @@ from backend.backend_controller import BackendController    # Not instantiated h
 from backend import constants
 from backend.app_user_management.user_manager import UserManager
 from backend.app_user_management import user_form_defines
+from backend import utils
 
 class AppManager():
     """Class responsible for setting up the Flask app and managing all the routes / sockets"""
@@ -208,7 +209,7 @@ class AppManager():
 
     def _create_url(self):
         # TODO - make port dyanmic and ensure it is unused
-        self._host_name = 'localhost'
+        self._host_ip = utils.get_ip_addr()
         self._port = 65502
 
     def _setup_app_config(self):
@@ -237,13 +238,13 @@ class AppManager():
             self._log.setLevel(logging.INFO)
 
         # TODO make open only happen when asked via flag
-        # webbrowser.open(f"http://{self._host_name}:{self._port}/")
-
-        # Url to go landing_page - http://localhost:5000/about
-        landing_page_url = "http://{hostname}:{port}{landing_page}".format(hostname=self._host_name, 
-                                            port=self._port, landing_page=self.sites["landing_page"])
+        homepage_url = utils.create_site_url(self._host_ip, self.sites["homepage"], self._port)
+        landing_page_url = utils.create_site_url(self._host_ip, self.sites["landing_page"], self._port)
         webbrowser.open(landing_page_url)
 
-        self._app.run(host=self._host_name, port=self._port, debug=self._debug)
-        # werkzeug.serving.run_simple(hostname=self._host_name, port=int(self._port), 
+        print(f"Landing Page:  {landing_page_url}")
+        print(f"Homepage Page: {homepage_url}")
+
+        self._app.run(host=self._host_ip, port=self._port, debug=self._debug)
+        # werkzeug.serving.run_simple(hostname=self._host_ip, port=int(self._port), 
         #                         application=self._app, use_debugger=self._debug)
