@@ -4,7 +4,7 @@ After=network-online.target
 Requires=network-online.target
 
 [Service]
-EnvironmentFile=/etc/sysconfig/web_app_environ
+EnvironmentFilebash=/etc/sysconfig/web_app_environ
 ExecStart=/bin/bash ${project_root_dir}/run.sh
 RestartSec=1min
 

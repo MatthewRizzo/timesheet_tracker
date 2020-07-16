@@ -65,8 +65,8 @@ class AppManager():
             return render_template("landing_page.html", title="Timesheet Tracker About Page", links=self.sites, form_links=self.form_sites)
             
 
-        @login_required
         @self._app.route(self.sites["homepage"])
+        @login_required
         def homepage():
             username = current_user.backend_controller.get_username()
             return render_template("index.html", username=username)
@@ -75,8 +75,8 @@ class AppManager():
         def favicon():
             return send_from_directory(self._images_dir, 'stopwatch.png', mimetype='image/vnd.microsoft.icon')
 
-        @login_required
         @self._app.route('/load_data_at_startup', methods=["POST"])
+        @login_required
         def load_data_at_startup():
             try:
                 current_user.backend_controller.load_in_data_at_startup()
@@ -116,8 +116,8 @@ class AppManager():
 
     def _create_task_selection_routes(self):
         """Function responsible for all routes in the Task Selection Panel"""
-        @login_required
         @self._app.route('/add_task', methods=['POST'])
+        @login_required
         def add_task():
             if request.method == "POST":
                 new_task = request.get_json()['new_task']
@@ -126,8 +126,8 @@ class AppManager():
                 # Remove lock on dropdown
             return jsonify(return_code)
 
-        @login_required
         @self._app.route('/get_task_list', methods=['POST', 'GET'])
+        @login_required
         def get_task_list():
             task_list = current_user.backend_controller.get_task_list()
             self._send_to_client('update_info', {'info': 'Loaded data from previous runs of the program'})
@@ -135,22 +135,22 @@ class AppManager():
 
     def _create_timer_routes(self):
         """Function responsible for all routes in the timer/Stopwatch Panel"""
-        @login_required
         @self._app.route('/start_timer', methods=['POST'])
+        @login_required
         def start_timer():
             task_name = request.get_json()['task']
             current_user.backend_controller.start_timer(task_name)
             return jsonify('ACK')
 
-        @login_required
         @self._app.route('/stop_timer', methods=['POST'])
+        @login_required
         def stop_timer():
             task_name = request.get_json()['task']
             current_user.backend_controller.stop_timer(task_name)
             return jsonify('ACK')
 
-        @login_required
         @self._app.route('/get_current_diff', methods=['POST'])
+        @login_required
         def get_current_diff():
             task_name = request.get_json()['task']
             time_diff = current_user.backend_controller.get_current_diff(task_name)
@@ -159,8 +159,8 @@ class AppManager():
             return jsonify({'time_diff': time_diff, 'units': units})
     
     def _create_time_display_routes(self):
-        @login_required
         @self._app.route("/get_total_time", methods=["POST"])
+        @login_required
         def get_total_time():
             task_name = request.get_json()['task']
             total_time = current_user.backend_controller.get_total_time(task_name)
@@ -168,8 +168,8 @@ class AppManager():
             units = current_user.backend_controller.time_units
             return jsonify({'total_time': total_time, 'units': units})
 
-        @login_required
         @self._app.route("/get_completed_times", methods=["POST"])
+        @login_required
         def get_completed_times():
             task_name = request.get_json()['task']
             units = current_user.backend_controller.time_units
