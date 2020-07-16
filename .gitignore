@@ -7,6 +7,9 @@ __pycache__/
 **virtual_environment_linux/
 **pyvenv.cfg
 
+# Ignores related to mongoDB
+**.msi
+**mdbinstall.log
 
 # Ignores related to logging / data 
 **stored_results/
