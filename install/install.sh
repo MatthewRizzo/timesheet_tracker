@@ -1,4 +1,13 @@
 #!/bin/bash
+[[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]] && is_windows=true || is_windows=false
+
+# if linux, need to check if using correct permissions
+if [[ "${is_windows}" = false ]]; then
+    if [ "$EUID" -ne 0 ]; then
+        echo "Please run as root ('sudo')"
+        exit
+    fi
+fi
 
 # Store the start loc to go back to it when done
 install_dir_path="$(readlink -fm $0/..)"
@@ -7,17 +16,16 @@ project_root_dir="$(readlink -fm ${install_dir_path}/..)"
 # Go to project root - navigate to the install folder and backup one to get to project root
 cd $project_root_dir
 
-# Check Python Version
+# Download python3.7
 python_version=3.7
-echo Checking Python version is ${python_version}
-current_version_text=$(python3.7 --version)
-current_minor_version=$(echo "$current_version_text" | awk '{print $2}')
-current_version=$(echo "${currVersionMinor}" | sed -r 's/\.[0-9]$//') # Takes away minor version (3.7.2 -> 3.7)
- if [[ ${python_version} != ${current_version} ]]; then
-        echo "WARNING: Wrong version of python being used. Expects python${python_version}. This might affect results"
-        exit
-fi
+python_name=python${python_version}
 
+add-apt-repository -y ppa:deadsnakes/ppa
+apt update -y
+apt upgrade -y
+apt install -y \
+    ${python_name} \
+    ${python_name}-venv
 
 # Delete any currently existing venv's
 echo Deleting any existing virtual environment
@@ -25,7 +33,7 @@ rm -rf $project_root_dir/virtual_environment_linux
 
 # Create the venv
 echo Creating the virtual environment
-python$python_version -m venv virtual_environment_linux
+$python_name -m venv virtual_environment_linux
 
 # Setup Path's relative to project root
 venv_dir_name='virtual_environment_linux'
