@@ -57,6 +57,23 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
+# Make sure every required variable is set - ensures this script is called from install.sh
+trap "exit 1" TERM
+export TOP_PID=$$
+# $1 = variable
+function exitIfUnset() {
+    toTest=$1
+    if [ "${toTest}" = "" ]; then
+        echo "Not all flags set... "
+        print_flags
+        kill -s TERM $TOP_PID # exit 1
+    fi
+}
+# actually check each variable
+echo -e "$(exitIfUnset ${root_dir})\c"
+echo -e "$(exitIfUnset ${install_dir})\c"
+echo -e "$(exitIfUnset ${user_data_dir})\c"
+
 
 # $1 is the path being converted
 # returns a  windows path -- capture with res=$(linux_to_win_path <path>)
