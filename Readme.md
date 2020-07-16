@@ -22,6 +22,11 @@ This code will keep track of timespent on a task(s) through a UI with a start/st
 
 Consists of the "Task Selection", "Timer", and "Time Display" sections.
 
+### How to Deploy to Linux Server
+1. It is faily simple. run `install/setup_service.sh`
+2. Use the scripts in `server_utility_scripts` to start, stop, and restart the service
+3. Expose the port on your server used by the program (TODO to not have that port be hardcoded, and taken in as a flag)
+
 ### Task Selection
 
 Will have 2 elements. 
