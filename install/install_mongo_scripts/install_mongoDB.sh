@@ -62,8 +62,8 @@ trap "exit 1" TERM
 export TOP_PID=$$
 # $1 = variable
 function exitIfUnset() {
-    toTest=$1
-    if [ "${toTest}" = "" ]; then
+    to_test=$1
+    if [ "${to_test}" = "" ]; then
         echo "Not all flags set... "
         print_flags
         kill -s TERM $TOP_PID # exit 1
