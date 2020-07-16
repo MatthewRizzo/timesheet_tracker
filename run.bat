@@ -9,5 +9,5 @@ if EXIST %full_python_path% (
     %path_to_windows_venv%\%python_program% src\__main__.py
 ) ELSE (
     echo The Windows Virtual Environment is not setup.
-    echo Please run installation\install.bat and then rerun this script 
+    echo Please run install\install.bat and then rerun this script 
 )

@@ -17,6 +17,7 @@ from backend.backend_controller import BackendController    # Not instantiated h
 from backend import constants
 from backend.app_user_management.user_manager import UserManager
 from backend.app_user_management import user_form_defines
+from backend import utils
 
 class AppManager():
     """Class responsible for setting up the Flask app and managing all the routes / sockets"""
@@ -64,8 +65,8 @@ class AppManager():
             return render_template("landing_page.html", title="Timesheet Tracker About Page", links=self.sites, form_links=self.form_sites)
             
 
-        @login_required
         @self._app.route(self.sites["homepage"])
+        @login_required
         def homepage():
             username = current_user.backend_controller.get_username()
             return render_template("index.html", username=username)
@@ -74,8 +75,8 @@ class AppManager():
         def favicon():
             return send_from_directory(self._images_dir, 'stopwatch.png', mimetype='image/vnd.microsoft.icon')
 
-        @login_required
         @self._app.route('/load_data_at_startup', methods=["POST"])
+        @login_required
         def load_data_at_startup():
             try:
                 current_user.backend_controller.load_in_data_at_startup()
@@ -115,8 +116,8 @@ class AppManager():
 
     def _create_task_selection_routes(self):
         """Function responsible for all routes in the Task Selection Panel"""
-        @login_required
         @self._app.route('/add_task', methods=['POST'])
+        @login_required
         def add_task():
             if request.method == "POST":
                 new_task = request.get_json()['new_task']
@@ -125,8 +126,8 @@ class AppManager():
                 # Remove lock on dropdown
             return jsonify(return_code)
 
-        @login_required
         @self._app.route('/get_task_list', methods=['POST', 'GET'])
+        @login_required
         def get_task_list():
             task_list = current_user.backend_controller.get_task_list()
             self._send_to_client('update_info', {'info': 'Loaded data from previous runs of the program'})
@@ -134,22 +135,22 @@ class AppManager():
 
     def _create_timer_routes(self):
         """Function responsible for all routes in the timer/Stopwatch Panel"""
-        @login_required
         @self._app.route('/start_timer', methods=['POST'])
+        @login_required
         def start_timer():
             task_name = request.get_json()['task']
             current_user.backend_controller.start_timer(task_name)
             return jsonify('ACK')
 
-        @login_required
         @self._app.route('/stop_timer', methods=['POST'])
+        @login_required
         def stop_timer():
             task_name = request.get_json()['task']
             current_user.backend_controller.stop_timer(task_name)
             return jsonify('ACK')
 
-        @login_required
         @self._app.route('/get_current_diff', methods=['POST'])
+        @login_required
         def get_current_diff():
             task_name = request.get_json()['task']
             time_diff = current_user.backend_controller.get_current_diff(task_name)
@@ -158,8 +159,8 @@ class AppManager():
             return jsonify({'time_diff': time_diff, 'units': units})
     
     def _create_time_display_routes(self):
-        @login_required
         @self._app.route("/get_total_time", methods=["POST"])
+        @login_required
         def get_total_time():
             task_name = request.get_json()['task']
             total_time = current_user.backend_controller.get_total_time(task_name)
@@ -167,8 +168,8 @@ class AppManager():
             units = current_user.backend_controller.time_units
             return jsonify({'total_time': total_time, 'units': units})
 
-        @login_required
         @self._app.route("/get_completed_times", methods=["POST"])
+        @login_required
         def get_completed_times():
             task_name = request.get_json()['task']
             units = current_user.backend_controller.time_units
@@ -208,8 +209,8 @@ class AppManager():
 
     def _create_url(self):
         # TODO - make port dyanmic and ensure it is unused
-        self._host_name = 'localhost'
-        self._port = 5000
+        self._host_ip = utils.get_ip_addr()
+        self._port = 65502
 
     def _setup_app_config(self):
         self._cur_file_path = os.path.abspath(os.path.dirname(__file__))
@@ -237,13 +238,13 @@ class AppManager():
             self._log.setLevel(logging.INFO)
 
         # TODO make open only happen when asked via flag
-        # webbrowser.open(f"http://{self._host_name}:{self._port}/")
-
-        # Url to go landing_page - http://localhost:5000/about
-        landing_page_url = "http://{hostname}:{port}{landing_page}".format(hostname=self._host_name, 
-                                            port=self._port, landing_page=self.sites["landing_page"])
+        homepage_url = utils.create_site_url(self._host_ip, self.sites["homepage"], self._port)
+        landing_page_url = utils.create_site_url(self._host_ip, self.sites["landing_page"], self._port)
         webbrowser.open(landing_page_url)
 
-        self._app.run(host=self._host_name, port=self._port, debug=self._debug)
-        # werkzeug.serving.run_simple(hostname=self._host_name, port=int(self._port), 
+        print(f"Landing Page:  {landing_page_url}")
+        print(f"Homepage Page: {homepage_url}")
+
+        self._app.run(host=self._host_ip, port=self._port, debug=self._debug)
+        # werkzeug.serving.run_simple(hostname=self._host_ip, port=int(self._port), 
         #                         application=self._app, use_debugger=self._debug)

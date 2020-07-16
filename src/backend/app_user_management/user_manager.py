@@ -52,7 +52,7 @@ class UserManager():
 
         # Create a new user based on the information gathered (adds it to internal data structures)
         new_user = self._create_user(username, password, user_token)
-        UserManager._valid_users_name.append(username)
+        UserManager._valid_users_names.append(username)
 
         # Update the cookie file with the new users
         self._add_to_cookie_file(username, password, user_token)
@@ -146,7 +146,7 @@ class UserManager():
             return
 
         # Create path to parent dir of file
-        if path_to_user_dir.exists is False:
+        if path_to_user_dir.exists() is False:
             path_to_user_dir.mkdir(parents=True)
         if path_to_cookie_file.exists() is False:
             # If the file itself does not exist, create it
@@ -208,5 +208,5 @@ class UserManager():
             """\n:brief: VERY important. This callback  redirects the user to login if needed.
                 "@login_required" triggers this function if page is accessed without logging in
             """
-            return redirect(constants.SITE_PATHS["login"])
+            return redirect(constants.FORM_SITES["login"])
 
