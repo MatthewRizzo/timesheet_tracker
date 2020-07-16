@@ -52,7 +52,7 @@ class UserManager():
 
         # Create a new user based on the information gathered (adds it to internal data structures)
         new_user = self._create_user(username, password, user_token)
-        UserManager._valid_users_name.append(username)
+        UserManager._valid_users_names.append(username)
 
         # Update the cookie file with the new users
         self._add_to_cookie_file(username, password, user_token)
