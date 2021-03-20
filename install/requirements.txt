@@ -5,7 +5,7 @@ flask-login==0.5.0
 Flask-SocketIO==4.3.1
 Flask-Uploads==0.2.1
 flask-wtf==0.14.3
-Jinja2==2.11.2
+Jinja2==2.11.3
 pylint==2.5.3
 pyserial==3.4
 python-engineio==3.13.1
